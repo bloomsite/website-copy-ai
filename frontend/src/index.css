@@ -5,7 +5,7 @@
   font-weight: 400;
 
   /* color variables */
-  --color-background: #f4f1ee;
+  --color-background: #e6e5e5;
   --color-surface: #ffffff;
   --color-muted: #e8e4e1;
   --color-border: #d8d3cf;
@@ -31,6 +31,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 a {
   font-weight: 500;
   color: var(--color-link);
@@ -42,8 +46,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
