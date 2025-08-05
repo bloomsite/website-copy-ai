@@ -21,6 +21,10 @@
 
   --color-link: #646cff;
   --color-link-hover: #535bf2;
+
+  --color-valid: #28a745;
+  --color-error: #e64646;
+
   
   /* Default settings */
   color: var(--color-text); 

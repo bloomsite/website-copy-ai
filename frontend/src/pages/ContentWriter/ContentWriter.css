@@ -1,0 +1,206 @@
+/* CSS Custom Properties - Add these new color variables */
+:root {
+  --color-valid: #10b981;   /* Green for valid state */
+  --color-error: #ef4444;   /* Red for error state */
+}
+
+/* Main page wrapper */
+.content-writer-page {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 4rem;
+  background: var(--color-background);
+  min-height: 100vh;
+}
+
+/* Page header */
+.content-writer-page .page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.content-writer-page .page-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.content-writer-page .page-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-subtle-text);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.content-writer-page .page-type-badge {
+  display: inline-block;
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  border: 1px solid var(--color-border);
+}
+
+/* Form wrapper */
+.content-writer-page .content-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Field groups */
+.content-writer-page .field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.content-writer-page .field-label {
+  font-weight: bold;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+/* Helper text */
+.content-writer-page .field-help {
+  font-size: 0.875rem;
+  color: var(--color-subtle-text);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Input fields (select, textarea) */
+.content-writer-page .field-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.content-writer-page .field-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Textarea specific styling */
+.content-writer-page .field-textarea {
+  min-height: 150px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Valid state */
+.content-writer-page .field-input.field-valid {
+  border-color: var(--color-valid);
+}
+
+.content-writer-page .field-input.field-valid:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Invalid state */
+.content-writer-page .field-input.field-invalid {
+  border-color: var(--color-error);
+}
+
+.content-writer-page .field-input.field-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Error messages */
+.content-writer-page .field-error {
+  font-size: 0.875rem;
+  color: var(--color-error);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+/* Submit button */
+.content-writer-page .submit-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  align-self: flex-start;
+}
+
+.content-writer-page .submit-button:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content-writer-page .submit-button:disabled,
+.content-writer-page .submit-button.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.content-writer-page .submit-button:disabled:hover,
+.content-writer-page .submit-button.is-disabled:hover {
+  background-color: var(--color-primary);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .content-writer-page {
+    padding: 2rem;
+    max-width: 100%;
+  }
+  
+  .content-writer-page .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .content-writer-page .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .content-writer-page .content-form {
+    gap: 1.25rem;
+  }
+  
+  .content-writer-page .submit-button {
+    width: 100%;
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-writer-page {
+    padding: 1.5rem;
+  }
+  
+  .content-writer-page .page-header {
+    margin-bottom: 2rem;
+  }
+  
+  .content-writer-page .page-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .content-writer-page .field-input {
+    padding: 0.625rem;
+  }
+}
