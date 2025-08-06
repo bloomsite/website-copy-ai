@@ -1,7 +1,41 @@
-/* CSS Custom Properties - Add these new color variables */
-:root {
-  --color-valid: #10b981;   /* Green for valid state */
-  --color-error: #ef4444;   /* Red for error state */
+
+.content-writer-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #f3f3f3;
+  overflow-y: auto;
+}
+
+.content-writer-display {
+  padding: 4rem; 
+
+}
+
+.extra-input-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+}
+
+.content-user {
+  background-color: var(--color-primary);
+  margin-left: 6rem;
+}
+
+.content-card .content-text {
+  color: var(--color-text);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
 }
 
 /* Main page wrapper */
@@ -60,11 +94,12 @@
 }
 
 /* Labels */
-.content-writer-page .field-label {
+ .field-label {
   font-weight: bold;
   color: var(--color-text);
   margin-bottom: 0.25rem;
   font-size: 1rem;
+  text-align: left;
 }
 
 /* Helper text */
@@ -73,6 +108,7 @@
   color: var(--color-subtle-text);
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  text-align: left;
 }
 
 /* Input fields (select, textarea) */
@@ -93,7 +129,7 @@
 }
 
 /* Textarea specific styling */
-.content-writer-page .field-textarea {
+.field-textarea {
   min-height: 150px;
   resize: vertical;
   font-family: inherit;
@@ -127,7 +163,7 @@
 }
 
 /* Submit button */
-.content-writer-page .submit-button {
+.submit-button {
   background-color: var(--color-primary);
   color: white;
   border: none;
@@ -141,22 +177,21 @@
   align-self: flex-start;
 }
 
-.content-writer-page .submit-button:hover:not(:disabled) {
+.submit-button:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.content-writer-page .submit-button:disabled,
-.content-writer-page .submit-button.is-disabled {
+.submit-button:disabled,
+.submit-button.is-disabled { 
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
-
-.content-writer-page .submit-button:disabled:hover,
-.content-writer-page .submit-button.is-disabled:hover {
+.submit-button:disabled:hover,
+.submit-button.is-disabled:hover {
   background-color: var(--color-primary);
   transform: none;
   box-shadow: none;
@@ -181,7 +216,7 @@
     gap: 1.25rem;
   }
   
-  .content-writer-page .submit-button {
+  .submit-button {
     width: 100%;
     align-self: stretch;
   }
