@@ -34,7 +34,7 @@ const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   options,
-  placeholder = "Select an option...",
+  placeholder = "Selecteer een optie...",
   helperText,
   validationState,
   size = "medium",
