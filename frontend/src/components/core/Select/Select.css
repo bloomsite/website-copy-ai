@@ -1,0 +1,132 @@
+.select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.select-label {
+  font-weight: 500;
+  color: var(--color-text);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.select-required {
+  color: var(--color-error);
+}
+
+.select-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.select-input {
+  width: 100%;
+  padding: 0.75rem;
+  padding-right: 2.5rem; /* Space for the arrow */
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  transition: all 0.2s ease;
+}
+
+/* Size variants */
+.select-small .select-input {
+  padding: 0.5rem;
+  padding-right: 2rem;
+  font-size: 0.875rem;
+}
+
+.select-large .select-input {
+  padding: 1rem;
+  padding-right: 3rem;
+  font-size: 1.125rem;
+}
+
+/* Custom arrow */
+.select-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-subtle-text);
+  pointer-events: none;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.select-focused .select-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* States */
+.select-input:hover:not(:disabled) {
+  border-color: var(--color-text);
+}
+
+.select-focused .select-input {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(168, 213, 186, 0.2);
+}
+
+.select-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.select-disabled .select-input {
+  background-color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* Validation states */
+.select-error .select-input {
+  border-color: var(--color-error);
+}
+
+.select-error .select-input:focus {
+  box-shadow: 0 0 0 3px rgba(230, 70, 70, 0.2);
+}
+
+.select-success .select-input {
+  border-color: var(--color-valid);
+}
+
+.select-success .select-input:focus {
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.select-warning .select-input {
+  border-color: var(--color-secondary);
+}
+
+.select-warning .select-input:focus {
+  box-shadow: 0 0 0 3px rgba(246, 214, 189, 0.2);
+}
+
+/* Helper text */
+.select-helper-text {
+  font-size: 0.875rem;
+  color: var(--color-subtle-text);
+  margin-top: 0.25rem;
+}
+
+.select-helper-error {
+  color: var(--color-error);
+}
+
+.select-helper-success {
+  color: var(--color-valid);
+}
+
+.select-helper-warning {
+  color: var(--color-secondary);
+}

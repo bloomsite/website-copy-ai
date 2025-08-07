@@ -1,0 +1,179 @@
+.textfield-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.textfield-label {
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.textfield-required {
+  color: var(--color-error);
+}
+
+.textfield-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.textfield-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+}
+
+.textfield-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Size variants */
+.textfield-small .textfield-input {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.textfield-large .textfield-input {
+  padding: 1rem;
+  font-size: 1.125rem;
+}
+
+/* Icons */
+.textfield-with-start-icon .textfield-input {
+  padding-left: 2.5rem;
+}
+
+.textfield-with-end-icon .textfield-input {
+  padding-right: 2.5rem;
+}
+
+.textfield-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  color: var(--color-subtle-text);
+  pointer-events: none;
+}
+
+.textfield-start-icon {
+  left: 0;
+}
+
+.textfield-end-icon {
+  right: 0;
+}
+
+/* States */
+.textfield-focused .textfield-input {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(168, 213, 186, 0.2);
+}
+
+.textfield-success .textfield-input {
+  border-color: var(--color-valid);
+}
+
+.textfield-success.textfield-focused .textfield-input {
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.textfield-error .textfield-input {
+  border-color: var(--color-error);
+}
+
+.textfield-error.textfield-focused .textfield-input {
+  box-shadow: 0 0 0 3px rgba(230, 70, 70, 0.2);
+}
+
+.textfield-warning .textfield-input {
+  border-color: var(--color-secondary);
+}
+
+.textfield-warning.textfield-focused .textfield-input {
+  box-shadow: 0 0 0 3px rgba(246, 214, 189, 0.2);
+}
+
+.textfield-disabled .textfield-input {
+  background-color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.textfield-readonly .textfield-input {
+  background-color: var(--color-muted);
+  cursor: default;
+}
+
+/* Helper text */
+.textfield-helper-text {
+  font-size: 0.75rem;
+  color: var(--color-subtle-text);
+  margin-top: 0.25rem;
+}
+
+.textfield-helper-error {
+  color: var(--color-error);
+}
+
+.textfield-helper-success {
+  color: var(--color-valid);
+}
+
+.textfield-helper-warning {
+  color: var(--color-secondary);
+}
+
+/* Clear button */
+.textfield-clear-button {
+  position: absolute;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-muted);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.textfield-clear-button:hover {
+  opacity: 1;
+}
+
+.textfield-with-end-icon .textfield-clear-button {
+  right: 2.5rem;
+}
+
+/* Focus outline */
+.textfield-input:focus {
+  outline: none;
+}
+
+/* Placeholder */
+.textfield-input::placeholder {
+  color: var(--color-subtle-text);
+  opacity: 0.8;
+}

@@ -2,8 +2,35 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import "./ContentWriter.css";
 import useGenerateContent from "../../hooks/ContentGeneration/useGenerateContent";
+import Button from "../../components/core/Button/Button";
+import TextField from "../../components/core/TextField/TextField";
+import Select from "../../components/core/Select/Select";
 
-const MIN_WORDS = 30;
+const toneOptions = [
+  { value: "professional", label: "Professioneel" },
+  { value: "friendly", label: "Vriendelijk" },
+  { value: "persuasive", label: "Overtuigend" },
+  { value: "informative", label: "Informatief" },
+  { value: "casual", label: "Informeel" },
+];
+
+const audienceOptions = [
+  { value: "men", label: "Mannen" },
+  { value: "women", label: "Vrouwen" },
+  { value: "students", label: "Studenten" },
+  { value: "parents", label: "Ouders" },
+  { value: "starting-parents", label: "Beginnende ouders" },
+];
+
+const goalOptions = [
+  { value: "increase-sales", label: "Verkoop Vergroten" },
+  { value: "build-awareness", label: "Bewustzijn Opbouwen" },
+  { value: "educate-audience", label: "Doelgroep Informeren" },
+  { value: "promote-event", label: "Evenement Promoten" },
+  { value: "generate-leads", label: "Leads Genereren" },
+];
+
+const MIN_WORDS = 15;
 
 interface FormData {
   tone: string;
@@ -57,8 +84,8 @@ const ContentWriter: React.FC = () => {
       .trim()
       .replace(/\s+/g, " ");
     const wordCount = stripped === "" ? 0 : stripped.split(/\s+/).length;
-    if (wordCount === 0) return "This field is required";
-    if (wordCount < MIN_WORDS) return `Use at least ${MIN_WORDS} words.`;
+    if (wordCount === 0) return "Dit veld is verplicht";
+    if (wordCount < MIN_WORDS) return `Gebruik minimaal ${MIN_WORDS} woorden.`;
     return "";
   };
 
@@ -75,9 +102,9 @@ const ContentWriter: React.FC = () => {
     e.preventDefault();
 
     const newErrors: FormData = {
-      tone: formData.tone ? "" : "This field is required",
-      audience: formData.audience ? "" : "This field is required",
-      goal: formData.goal ? "" : "This field is required",
+      tone: formData.tone ? "" : "Dit veld is verplicht",
+      audience: formData.audience ? "" : "Dit veld is verplicht",
+      goal: formData.goal ? "" : "Dit veld is verplicht",
       description: validateDescription(formData.description),
     };
 
@@ -99,29 +126,15 @@ const ContentWriter: React.FC = () => {
     formData.description &&
     !validateDescription(formData.description);
 
-  const getFieldClass = (fieldName: keyof FormData) => {
-    if (errors[fieldName]) return "field-invalid";
-    if (formData[fieldName] && fieldName !== "description")
-      return "field-valid";
-    if (
-      fieldName === "description" &&
-      formData.description &&
-      !validateDescription(formData.description)
-    ) {
-      return "field-valid";
-    }
-    return "";
-  };
-
   return (
     <>
       <div className="content-writer-items">
         <div className="content-writer-page">
           <div className="page-header">
-            <h1>Provide Details For Your Content</h1>
+            <h1>Geef Details Voor Uw Content</h1>
             <p className="page-subtitle">
-              Help us understand your needs so we can generate the perfect
-              content for your audience.
+              Help ons uw behoeften te begrijpen zodat we de perfecte content
+              voor uw doelgroep kunnen genereren.
               {pageType && <span className="page-type-badge">{pageType}</span>}
             </p>
           </div>
@@ -132,113 +145,109 @@ const ContentWriter: React.FC = () => {
               <form className="content-form" onSubmit={handleSubmit}>
                 <div className="field-group">
                   <label htmlFor="tone" className="field-label">
-                    Tone of Voice
+                    Toon van Stem
                   </label>
                   <p className="field-help">
-                    Choose the style in which your content will be written.
+                    Kies de stijl waarin uw content geschreven wordt.
                   </p>
-                  <select
+                  <TextField
                     id="tone"
                     value={formData.tone}
-                    onChange={(e) => handleChange("tone", e.target.value)}
-                    className={`field-input ${getFieldClass("tone")}`}
+                    onChange={(value) => handleChange("tone", value)}
+                    label="Toon van Stem"
+                    placeholder="Selecteer een toon..."
                     disabled={isGenerating}
-                  >
-                    <option value="">Select a tone...</option>
-                    <option value="professional">Professional</option>
-                    <option value="friendly">Friendly</option>
-                    <option value="persuasive">Persuasive</option>
-                    <option value="informative">Informative</option>
-                    <option value="casual">Casual</option>
-                  </select>
-                  {errors.tone && (
-                    <div className="field-error">{errors.tone}</div>
-                  )}
+                    type="text"
+                    validationState={errors.tone ? "error" : undefined}
+                    helperText={errors.tone}
+                    required
+                  />
                 </div>
 
                 <div className="field-group">
                   <label htmlFor="audience" className="field-label">
-                    Target Audience
+                    Doelgroep
                   </label>
                   <p className="field-help">
-                    Select the primary audience you want to reach.
+                    Selecteer de primaire doelgroep die u wilt bereiken.
                   </p>
-                  <select
+                  <TextField
                     id="audience"
                     value={formData.audience}
-                    onChange={(e) => handleChange("audience", e.target.value)}
-                    className={`field-input ${getFieldClass("audience")}`}
+                    onChange={(value) => handleChange("audience", value)}
+                    label="Doelgroep"
+                    placeholder="Selecteer een doelgroep..."
                     disabled={isGenerating}
-                  >
-                    <option value="">Select an audience...</option>
-                    <option value="general-public">General Public</option>
-                    <option value="business-owners">Business Owners</option>
-                    <option value="students">Students</option>
-                    <option value="parents">Parents</option>
-                    <option value="tech-enthusiasts">Tech Enthusiasts</option>
-                  </select>
-                  {errors.audience && (
-                    <div className="field-error">{errors.audience}</div>
-                  )}
+                    type="text"
+                    validationState={errors.audience ? "error" : undefined}
+                    helperText={errors.audience}
+                    required
+                  />
                 </div>
 
                 <div className="field-group">
                   <label htmlFor="goal" className="field-label">
-                    Goal
+                    Doel
                   </label>
                   <p className="field-help">
-                    Choose the main goal for your content.
+                    Kies het hoofddoel voor uw content.
                   </p>
-                  <select
+                  <TextField
                     id="goal"
                     value={formData.goal}
-                    onChange={(e) => handleChange("goal", e.target.value)}
-                    className={`field-input ${getFieldClass("goal")}`}
+                    onChange={(value) => handleChange("goal", value)}
+                    label="Doel"
+                    placeholder="Selecteer een doel..."
                     disabled={isGenerating}
-                  >
-                    <option value="">Select a goal...</option>
-                    <option value="increase-sales">Increase Sales</option>
-                    <option value="build-awareness">Build Awareness</option>
-                    <option value="educate-audience">Educate Audience</option>
-                    <option value="promote-event">Promote Event</option>
-                    <option value="generate-leads">Generate Leads</option>
-                  </select>
-                  {errors.goal && (
-                    <div className="field-error">{errors.goal}</div>
-                  )}
+                    type="text"
+                    validationState={errors.goal ? "error" : undefined}
+                    helperText={errors.goal}
+                    required
+                  />
+                </div>
+
+                <div className="field-group">
+                  <Select
+                    id="goal"
+                    label="Doel van de gegenereerde content"
+                    value={formData.goal}
+                    options={goalOptions}
+                    onChange={(value) => handleChange("goal", value)}
+                    helperText="yo"
+                  ></Select>
                 </div>
 
                 <div className="field-group">
                   <label htmlFor="description" className="field-label">
-                    Describe Your Service
+                    Beschrijf Uw Service
                   </label>
                   <p className="field-help">
-                    Briefly describe the service or product you provide.
+                    Beschrijf kort de service of het product dat u aanbiedt.
                   </p>
-                  <textarea
+                  <TextField
                     id="description"
                     value={formData.description}
-                    onChange={(e) =>
-                      handleChange("description", e.target.value)
-                    }
-                    className={`field-input field-textarea ${getFieldClass(
-                      "description"
-                    )}`}
-                    placeholder="Tell us about your service or product..."
+                    onChange={(value) => handleChange("description", value)}
+                    label="Beschrijf Uw Service"
+                    placeholder="Vertel ons over uw service of product..."
                     disabled={isGenerating}
+                    type="text"
+                    multiline
+                    rows={5}
+                    validationState={errors.description ? "error" : undefined}
+                    helperText={errors.description}
+                    required
                   />
-                  {errors.description && (
-                    <div className="field-error">{errors.description}</div>
-                  )}
                 </div>
 
-                <button
+                <Button
                   type="submit"
-                  className="submit-button"
+                  text={
+                    isGenerating ? "Content Genereren..." : "Genereer Content"
+                  }
                   disabled={!isFormValid || isGenerating}
-                >
-                  {isGenerating ? "Generating Content..." : "Generate Content"}
-                </button>
+                  isLoading={isGenerating}
+                />
               </form>
             </div>
 
@@ -265,7 +274,7 @@ const ContentWriter: React.FC = () => {
                   className="content-text"
                   style={{ color: "var(--color-error)" }}
                 >
-                  Error generating content: {generateError.message}
+                  Fout bij het genereren van content: {generateError.message}
                 </div>
               </div>
             )}
@@ -277,25 +286,27 @@ const ContentWriter: React.FC = () => {
               </div>
             ))}
 
-            <div className="extra-input-section">
-              <label htmlFor="extra-input" className="field-label">
-                Geef extra input
-              </label>
-              <textarea
-                id="extra-input"
-                className="field-input field-textarea"
-                placeholder="Add any extra details or feedback for the content..."
-                value={extraInput}
-                onChange={(e) => setExtraInput(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={handleExtraInputSubmit}
-                className="submit-button"
-              >
-                Extra input geven
-              </button>
-            </div>
+            {generatedContent && (
+              <div className="extra-input-section">
+                <label htmlFor="extra-input" className="field-label">
+                  Geef extra input
+                </label>
+                <TextField
+                  id="extra-input"
+                  label="Extra input"
+                  placeholder="Voeg extra details of feedback toe voor de content..."
+                  value={extraInput}
+                  onChange={setExtraInput}
+                  multiline
+                  rows={3}
+                />
+                <Button
+                  type="button"
+                  onClick={handleExtraInputSubmit}
+                  text="Extra input geven"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,0 +1,25 @@
+.onboarding-page {
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-top: var(--navbar-height);
+}
+
+.onboarding-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem 0;
+}
+
+/* Add some spacing for multiline text fields */
+.onboarding-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}

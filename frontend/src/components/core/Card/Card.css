@@ -1,0 +1,135 @@
+.card {
+  background-color: var(--color-surface);
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* Variants */
+.card-outline {
+  background-color: transparent;
+  border: 2px solid var(--color-border);
+}
+
+.card-filled {
+  background-color: var(--color-secondary);
+  border: none;
+}
+
+/* Sizes */
+.card-small {
+  font-size: 0.875rem;
+}
+
+.card-small .card-header,
+.card-small .card-content:not(.card-no-padding),
+.card-small .card-footer {
+  padding: 0.75rem;
+}
+
+.card-medium .card-header,
+.card-medium .card-content:not(.card-no-padding),
+.card-medium .card-footer {
+  padding: 1.25rem;
+}
+
+.card-large .card-header,
+.card-large .card-content:not(.card-no-padding),
+.card-large .card-footer {
+  padding: 1.75rem;
+}
+
+/* Elevation */
+.card-elevation-none {
+  box-shadow: none;
+}
+
+.card-elevation-low {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card-elevation-medium {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-elevation-high {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.card-header-content {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-subtle-text);
+  margin: 0.25rem 0 0 0;
+  line-height: 1.4;
+}
+
+.card-header-action {
+  margin-left: 1rem;
+}
+
+/* Content */
+.card-content {
+  position: relative;
+}
+
+.card-centered .card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Footer */
+.card-footer {
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+/* Interactive states */
+.card-hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+.card-clickable:active {
+  transform: translateY(1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-header,
+  .card-content:not(.card-no-padding),
+  .card-footer {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+}
