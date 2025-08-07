@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "User Profile API",
+    "version": "1.0.0",
+    "description": "API for retrieving user profile information from Cosmos DB"
+  },
+  "servers": [
+    {
+      "url": "https://webcopy-ai-agent-tools.azurewebsites.net",
+      "description": "Azure Function App server"
+    }
+  ],
+  "paths": {
+    "/api/get_user_profile": {
+      "get": {
+        "summary": "Get User Profile",
+        "description": "Retrieves a user's profile information from Cosmos DB using their user ID",
+        "operationId": "getUserProfile",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "The unique identifier for the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Function authorization code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "User with ID xyz not found."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The user's unique identifier"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email address"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "User's first name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "User's last name"
+          },
+          "company_name": {
+            "type": "string",
+            "description": "User's company name"
+          },
+          "company_type": {
+            "type": "string",
+            "description": "Type of company"
+          },
+          "company_goal": {
+            "type": "string",
+            "description": "Company's main goal"
+          },
+          "target_audience": {
+            "type": "string",
+            "description": "Target audience description"
+          }
+        }
+      }
+    }
+  }
+}
