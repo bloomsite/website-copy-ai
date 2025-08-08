@@ -1,0 +1,10 @@
+.login-page {
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 4rem; 
+}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../services/apiClient";
-import { companyTypes } from "../../core/Contstants/CompanyTypes";
+import { companyTypes } from "../../core/Contstants/companyTypes";
 
 interface CompanyInfo {
   companyType: string;
@@ -27,7 +27,7 @@ export const useOnboarding = () => {
 
     try {
       await apiClient.post("/api/users/onboarding/", formData);
-      navigate("/dashboard");
+      navigate("/start");
     } catch (err) {
       setState({
         isLoading: false,

@@ -5,7 +5,7 @@ import Button from "../../core/Button/Button";
 import "./Login.css";
 
 interface LoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (LoginData: { email: string; password: string }) => void;
   isLoading?: boolean;
   error?: string;
 }
@@ -20,14 +20,14 @@ export const Login: React.FC<LoginProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(email, password);
+    onLogin({ email, password });
   };
 
   return (
     <div className="login-container">
       <Card
-        variant="filled"
-        size="medium"
+        variant="default"
+        size="large"
         elevation="medium"
         centered
         title="Welcome Back"

@@ -15,3 +15,6 @@ def save_user_profile(user_id: str, company_type: str, goal: str):
         "goal": goal
     }
     container.upsert_item(data)
+
+def update_user_profile(user_data: dict):
+    container.upsert_item(user_data)

@@ -3,9 +3,6 @@ import { AxiosError } from "axios";
 import apiClient from "../../services/apiClient";
 
 interface ContentRequestInterface {
-  tone: string;
-  audience: string;
-  goal: string;
   description: string;
   pageType?: string;
 }

@@ -19,7 +19,7 @@ def _ensure_client() -> AIProjectClient:
         raise AgentError("PROJECT_ENDPOINT and AGENT_ID must be set in environment.")
     return AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=DefaultAzureCredential())
 
-def generate_content_with_agent(payload: Dict, timeout_sec: int = 60) -> str:
+def generate_content_with_agent(payload: Dict, user_id, timeout_sec: int = 60) -> str:
     """
     payload: { tone, audience, goal, description, pageType }
     returns: assistant text content
@@ -37,7 +37,7 @@ def generate_content_with_agent(payload: Dict, timeout_sec: int = 60) -> str:
 
         # Prepare prompt for agent
         user_prompt = (
-            f"Write a text for the {page} page. With the goal to {goal} the audience which mainly consists of {audience} use the following tone {tone} here is the description of the text: {description}"
+            f"Content request for {user_id} Write a text for the {page} page. With the goal to {goal} the audience which mainly consists of {audience} use the following tone {tone} here is the description of the text: {description}"
         )
 
         # Add user message to thread 

@@ -6,21 +6,18 @@ import { useNavigate } from "react-router-dom";
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
+  const handleNavigate = () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      navigate("/register");
+    } else {
+      navigate("/start");
+    }
+  };
+
   return (
     <div className="home-page">
       {/* Navigation */}
-      <nav className="navbar">
-        <div className="nav-container">
-          <div className="logo">
-            <Sparkles className="logo-icon" />
-            Webcopy AI
-          </div>
-          <div className="nav-links">
-            <a href="#features">Functies</a>
-            <a href="#how-it-works">Hoe het werkt</a>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="hero">
@@ -42,7 +39,7 @@ const Home: React.FC = () => {
               converteren.
             </p>
 
-            <button className="cta-button" onClick={() => navigate("/start")}>
+            <button className="cta-button" onClick={handleNavigate}>
               Begin Nu
               <ArrowRight className="button-icon" />
             </button>
@@ -125,7 +122,7 @@ const Home: React.FC = () => {
           Sluit je aan bij duizenden professionals die hun online aanwezigheid
           hebben verhoogd met AI-gegenereerde content.
         </p>
-        <button className="cta-button" onClick={() => navigate("/start")}>
+        <button className="cta-button" onClick={handleNavigate}>
           Start met Content Creëren
           <ArrowRight className="button-icon" />
         </button>

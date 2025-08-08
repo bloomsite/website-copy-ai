@@ -7,23 +7,41 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .services.cosmosdb import update_user_profile
+
 from .models import User, Role
 
-class OnboardingView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+class UserOnboardingView(APIView):
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
-        user = request.user
+        
         data = request.data
+        user = request.user 
 
-        # Update the user profile with additional information
-        user.company_type = data.get('companyType')
-        user.company_goal = data.get('companyGoal')
-        user.target_audience = data.get('targetAudience')
         user.has_completed_onboarding = True
-        user.save()
+        
+        user_data = {
+            "id": str(user.uuid), 
+            "userId": str(user.uuid), 
+            "firstName": user.first_name,
+            "lastName": user.last_name,
+            "companyName": user.company_name,
+            "companyType": data.get("companyType"),
+            "companyGoal": data.get("companyGoal"),
+            "targetAudience": data.get("targetAudience")
+        }
 
-        return Response({"message": "Onboarding completed successfully"}, status=status.HTTP_200_OK)
+        try:
+            update_user_profile(user_data)
+        except Exception as e:
+            return Response(
+                {"detail": f"Failed to insert data into Cosmos DB: {str(e)}"},
+                status=status.HTTP_502_BAD_GATEWAY
+            )
+
+        return Response({"detail": "User profile saved successfully."}, status=status.HTTP_200_OK)
+
 
 # Create your views here.
 class RegisterClient(APIView):
@@ -94,3 +112,4 @@ class LogoutView(APIView):
                 return Response({'succes': 'User logged out, no refresh token'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+        

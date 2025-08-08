@@ -11,12 +11,16 @@ from .services.azure_agent import generate_content_with_agent, AgentError
 class GenerateContentView(APIView):
     # Add authentication/permission classes here if needed
     def post(self, request):
+
+
+        user_id = request.user.uuid
+
         serializer = GenerateContentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
         try:
-            content = generate_content_with_agent(data)
+            content = generate_content_with_agent(data, user_id)
         except AgentError as e:
             return Response({"detail": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
         except Exception as e:

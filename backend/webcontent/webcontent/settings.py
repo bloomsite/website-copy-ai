@@ -143,7 +143,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Restframework Settings 
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": ['rest_framework.renderers.BrowsableAPIRenderer'],
     
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
