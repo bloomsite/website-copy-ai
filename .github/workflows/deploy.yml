@@ -1,0 +1,18 @@
+name: Azure Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy-react:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sanity Check
+        run: echo "It works"

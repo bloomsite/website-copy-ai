@@ -14,7 +14,7 @@ interface TextFieldProps {
   // Optional props
   type?: "text" | "password" | "email" | "number" | "search" | "tel" | "url";
   placeholder?: string;
-  helperText?: string;
+  helperText?: string | null;
   validationState?: ValidationState;
   size?: Size;
   disabled?: boolean;

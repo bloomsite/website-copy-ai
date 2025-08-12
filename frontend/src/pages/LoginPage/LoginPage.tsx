@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
     <>
       <Navbar />
       <div className="login-page">
-        <Login isLoading={isLoading} onLogin={login} />
+        <Login isLoading={isLoading} onLogin={login} error={error} />
       </div>
     </>
   );

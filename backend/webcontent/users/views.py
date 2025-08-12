@@ -41,6 +41,8 @@ class UserOnboardingView(APIView):
             )
 
         return Response({"detail": "User profile saved successfully."}, status=status.HTTP_200_OK)
+    
+
 
 
 # Create your views here.
@@ -113,3 +115,39 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         
+
+class UserListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user 
+
+        if user.role != Role.ADMIN:
+            return Response({"error": "You do not have permission to view this resource."}, status=status.HTTP_403_FORBIDDEN)
+        
+        user_role = request.query_params.get('role', None)
+        if user_role:
+            users = User.objects.filter(role=user_role)
+        
+
+        user_id = request.query_params.get('id', None)
+        if user_id:
+            try:
+                user = User.objects.get(uuid=user_id)
+                users = [user]
+            except User.DoesNotExist:
+                return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        users = User.objects.all()
+        user_data = [
+            {
+                "id": str(user.uuid),
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "role": user.role,
+                "date_joined": user.date_joined.isoformat(),
+                "last_login": user.last_login.isoformat() if user.last_login else None
+            } for user in users
+        ]
+        return Response(user_data, status=status.HTTP_200_OK)
