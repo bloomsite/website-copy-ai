@@ -50,8 +50,7 @@ jobs:
     steps:
       - name: Sanity check -- which items are available
         run: |
-          ls 
-          cd backend 
+          ls -a 
           ls
 
       - name: Download artifact from build job
