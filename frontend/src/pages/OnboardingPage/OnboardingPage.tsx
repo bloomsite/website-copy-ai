@@ -14,7 +14,7 @@ interface CompanyInfo {
 }
 
 const OnboardingPage: React.FC = () => {
-  const { submitOnboarding, companyTypes, isLoading, error } = useOnboarding();
+  const { submitOnboarding, companyTypes, isLoading } = useOnboarding();
   const [formData, setFormData] = useState<CompanyInfo>({
     companyType: "",
     companyGoal: "",

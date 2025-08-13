@@ -46,7 +46,6 @@ interface ContentWriterFormProps {
 const ContentWriterForm: React.FC<ContentWriterFormProps> = ({
   onSubmit,
   isGenerating,
-  pageType,
 }) => {
   const [formData, setFormData] = useState<FormData>({
     tone: "",

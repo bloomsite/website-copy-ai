@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type FC } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./ContentWriter.css";
 import ContentWriterForm from "../../components/custom/ContentWriterForm/ContentWriterForm";
