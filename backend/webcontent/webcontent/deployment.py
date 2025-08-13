@@ -38,8 +38,8 @@ CONNECTION_STR = {pair.split('=')[0]:pair.split('=')[1] for pair in CONNECTION.s
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": CONNECTION_STR['db_name'],
-        "HOST": CONNECTION_STR['db_host'],
+        "NAME": CONNECTION_STR['dbname'],
+        "HOST": CONNECTION_STR['host'],
         "USER": CONNECTION_STR['user'],
         "PASSWORD": CONNECTION_STR['password'],
     }
