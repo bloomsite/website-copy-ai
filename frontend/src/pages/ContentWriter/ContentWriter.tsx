@@ -32,10 +32,10 @@ const ContentWriter: React.FC = () => {
 
   const { data, loading, error } = useGenerateContent(submitPayload);
   useEffect(() => {
-    if (data) setGeneratedContent(data);
-    if (loading !== undefined) setIsGenerating(loading);
-    if (error) setGenerateError(error);
-  }, [data]);
+    setGeneratedContent(data ?? null);
+    setIsGenerating(loading);
+    setGenerateError(error ?? null);
+  }, [data, loading, error]);
 
   const handleSubmit = (formData: FormData) => {
     // Add the pageType to the form data if it exists
