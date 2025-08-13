@@ -8,10 +8,7 @@ CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 DEBUG = False 
 SECRET_KEY = os.environ['MY_SECRET_KEY']
 
-CORS_ALLOWED_ORIGINS = [
-    'https://zealous-plant-07f08aa03.1.azurestaticapps.net', 
-    'https://zealous-plant-07f08aa03.1.azurestaticapps.net:5173',
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
