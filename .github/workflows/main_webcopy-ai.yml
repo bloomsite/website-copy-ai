@@ -26,19 +26,20 @@ jobs:
 
       - name: Create and start virtual environment
         run: |
-          cd backend
+          cd backend/webcontent
           python -m venv venv
           source venv/bin/activate
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd backend/webcontent
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Sanity check -- which items are available
+      - name: Collect staticfiles
         run: |
-          ls -a 
-          ls
+          cd backend/webcontent
+          python manage.py collectstatic --noinput
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -53,11 +54,6 @@ jobs:
     needs: build
 
     steps:
-      - name: Sanity check -- which items are available
-        run: |
-          ls -a 
-          ls
-
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
