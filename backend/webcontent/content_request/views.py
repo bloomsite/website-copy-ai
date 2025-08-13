@@ -24,7 +24,7 @@ class GenerateContentView(APIView):
         except AgentError as e:
             return Response({"detail": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
         except Exception as e:
-            return Response({"detail": "Unexpected error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": f"Unexpected error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(
             {
