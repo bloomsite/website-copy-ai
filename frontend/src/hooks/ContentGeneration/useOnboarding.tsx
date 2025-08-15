@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../services/apiClient";
-import { companyTypes } from "../../core/Contstants/companyTypes";
+import { companyTypes } from "../../core/Constants/companyTypes";
 
 interface CompanyInfo {
   companyType: string;
