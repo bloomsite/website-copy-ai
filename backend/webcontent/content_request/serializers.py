@@ -22,7 +22,7 @@ class GenerateContentSerializer(serializers.Serializer):
         ("home", "home"),
         ("about", "about"),
         ("product", "product"),
-        ("special-offer", "special-offer"),
+        ("offer", "offer"),
     ]
 
     # If you’ll fetch these from the backend later, switch to CharField and validate against your DB list.
