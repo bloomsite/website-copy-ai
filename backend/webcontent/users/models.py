@@ -36,9 +36,6 @@ class User(AbstractUser):
     company_name = models.CharField(max_length=255, blank=True, null=True)
     
     # Onboarding fields
-    company_type = models.CharField(max_length=50, blank=True, null=True)
-    company_goal = models.TextField(blank=True, null=True)
-    target_audience = models.TextField(blank=True, null=True)
     has_completed_onboarding = models.BooleanField(default=False)
 
     # Override the username field to use email
