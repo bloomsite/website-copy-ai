@@ -1,44 +1,25 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./NavigationSidebar.css";
-import { sidebarItems } from "./SidebarItems";
-import {
-  LayoutDashboard,
-  Mail,
-  Users,
-  FileText,
-  Settings,
-  Bot,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { type SidebarItem } from "../../../core/Types/typeSidebarItem";
+import { getIcon } from "./getIcon";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const getIcon = (iconName: string) => {
-  switch (iconName) {
-    case "dashboard":
-      return <LayoutDashboard size={20} />;
-    case "users":
-      return <Users size={20} />;
-    case "form":
-      return <FileText size={20} />;
-    case "settings":
-      return <Settings size={20} />;
-    case "mail":
-      return <Mail size={20} />;
-    case "bot":
-      return <Bot size={20} />;
-    default:
-      return null;
-  }
-};
+interface NavigationsSidebarProps {
+  sidebarTitle: string;
+  sidebarItems: SidebarItem[];
+}
 
-const NavigationSidebar = () => {
+const NavigationSidebar: React.FC<NavigationsSidebarProps> = ({
+  sidebarItems,
+  sidebarTitle,
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className={`navigation-sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
-        <h2>{!isCollapsed && "Admin Panel"}</h2>
+        <h2>{!isCollapsed && sidebarTitle}</h2>
         <button
           className="collapse-button"
           onClick={() => setIsCollapsed(!isCollapsed)}

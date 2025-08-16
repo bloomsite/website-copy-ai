@@ -1,8 +1,4 @@
-interface SidebarItem {
-  title: string;
-  icon: string;
-  route: string;
-}
+import { type SidebarItem } from "../Types/typeSidebarItem";
 
 export const sidebarItems: SidebarItem[] = [
   {
