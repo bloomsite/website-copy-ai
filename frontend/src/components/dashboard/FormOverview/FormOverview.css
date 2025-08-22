@@ -1,0 +1,22 @@
+.form-detail-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.form-detail-loading,
+.form-detail-error,
+.form-detail-empty {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--color-subtle-text);
+}
+
+.form-detail-description {
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.form-detail-short {
+  color: var(--color-subtle-text);
+}

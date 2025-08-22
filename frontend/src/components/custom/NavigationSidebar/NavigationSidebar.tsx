@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./NavigationSidebar.css";
 import { type SidebarItem } from "../../../core/Types/typeSidebarItem";
-import { getIcon } from "./getIcon";
+import { getIcon } from "../../../core/Utils/getIcon";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NavigationsSidebarProps {

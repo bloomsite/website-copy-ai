@@ -68,6 +68,22 @@
 
 .card-header-content {
   flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.card-icon {
+  flex-shrink: 0;
+  display: flex;
+  padding-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+}
+
+.card-text-content {
+  flex: 1;
 }
 
 .card-title {

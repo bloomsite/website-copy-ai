@@ -19,6 +19,7 @@ interface CardProps {
   title?: string;
   subtitle?: string;
   headerAction?: React.ReactNode;
+  icon?: React.ReactNode;
 
   // Footer props
   footer?: React.ReactNode;
@@ -39,6 +40,7 @@ const Card: React.FC<CardProps> = ({
   title,
   subtitle,
   headerAction,
+  icon,
   footer,
   noPadding = false,
   centered = false,
@@ -64,8 +66,11 @@ const Card: React.FC<CardProps> = ({
       {hasHeader && (
         <div className="card-header">
           <div className="card-header-content">
-            {title && <h3 className="card-title">{title}</h3>}
-            {subtitle && <p className="card-subtitle">{subtitle}</p>}
+            <div className="card-text-content">
+              {icon && <div className="card-icon">{icon}</div>}
+              {title && <h3 className="card-title">{title}</h3>}
+              {subtitle && <p className="card-subtitle">{subtitle}</p>}
+            </div>
           </div>
           {headerAction && (
             <div className="card-header-action">{headerAction}</div>

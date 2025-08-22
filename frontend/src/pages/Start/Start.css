@@ -129,14 +129,6 @@
   box-shadow: 0 4px 15px rgba(168, 213, 186, 0.2);
 }
 
-.card-icon {
-  color: var(--color-primary);
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .page-card h3 {
   font-size: 1.25rem;
   font-weight: 600;

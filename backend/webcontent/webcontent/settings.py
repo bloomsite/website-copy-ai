@@ -135,6 +135,33 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ############## CUSTOM SETTINGS ##############
 
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+        "null": {
+            "class": "logging.NullHandler",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["null"],   # swallow the "Internal Server Error" + traceback
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.server": {
+            "handlers": ["console"],  # still show the short access log line
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
+
 # Custom User Model
 AUTH_USER_MODEL = "users.User"
 
@@ -182,8 +209,26 @@ SIMPLE_JWT = {
 # COSMOS DB SETTINGS 
 AZURE_COSMOS_ENDPOINT = os.getenv('AZURE_COSMOS_ENDPOINT')
 AZURE_COSMOS_KEY = os.getenv('AZURE_COSMOS_KEY')
-AZURE_COSMOS_DB = os.getenv('AZURE_COSMOS_DB')
-AZURE_COSMOS_CONTAINER = os.getenv('AZURE_COSMOS_CONTAINER')
 
+AZURE_COSMOS_DATABASE_USER_DATA = os.getenv('AZURE_COSMOS_DATABASE_USER_DATA')
+AZURE_COSMOS_DATABASE_FORM_DATA = os.getenv('AZURE_COSMOS_DATABASE_FORM_DATA')
+
+AZURE_COSMOS_CONTAINER_USER_PROFILES = os.getenv('AZURE_COSMOS_CONTAINER_USER_PROFILES')
+AZURE_COSMOS_CONTAINER_FORM_DEFINITIONS = os.getenv('AZURE_COSMOS_CONTAINER_FORM_DEFINITIONS')
+
+COSMOS = {
+    # Authentication
+    'ENDPOINT': AZURE_COSMOS_ENDPOINT,
+    'KEY': AZURE_COSMOS_KEY,
+
+    # Databases 
+    'DATABASE_USER_DATA': AZURE_COSMOS_DATABASE_USER_DATA,
+    'DATABASE_FORM_DATA': AZURE_COSMOS_DATABASE_FORM_DATA, 
+
+    # Containers
+    'CONTAINER_USER_PROFILES': AZURE_COSMOS_CONTAINER_USER_PROFILES,
+    'CONTAINER_FORM_DEFINITIONS': AZURE_COSMOS_CONTAINER_FORM_DEFINITIONS, 
+
+}
 
 STATIC_ROOT = BASE_DIR / "staticfiles"

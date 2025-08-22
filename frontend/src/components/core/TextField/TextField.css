@@ -122,9 +122,11 @@
 
 /* Helper text */
 .textfield-helper-text {
+  display: flex;
+  justify-content: left;
   font-size: 0.75rem;
   color: var(--color-subtle-text);
-  margin-top: 0.25rem;
+  margin-bottom: 0.25rem; 
 }
 
 .textfield-helper-error {

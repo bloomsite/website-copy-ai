@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = CosmosClient(settings.AZURE_COSMOS_ENDPOINT, settings.AZURE_COSMOS_KEY)
-database = client.get_database_client(settings.AZURE_COSMOS_DB)
-container = database.get_container_client(settings.AZURE_COSMOS_CONTAINER)
+client = CosmosClient(settings.COSMOS['ENDPOINT'], settings.COSMOS['KEY'])
+database = client.get_database_client(settings.COSMOS['DATABASE_USER_DATA'])
+container = database.get_container_client(settings.COSMOS['CONTAINER_USER_PROFILES'])
 
 def save_user_profile(user_id: str, company_type: str, goal: str):
     data = {

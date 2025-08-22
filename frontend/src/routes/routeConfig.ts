@@ -2,12 +2,20 @@ import 'react'
 import Home from '../pages/Home/Home'
 import Start from '../pages/Start/Start'
 import ContentWriter from '../pages/ContentWriter/ContentWriter'
+
+// Authentication
 import RegisterPage from '../pages/RegisterPage/RegisterPage'
 import OnboardingPage from '../pages/OnboardingPage/OnboardingPage'
 import LoginPage from '../pages/LoginPage/LoginPage'
-import Admin from '../pages/Admin/Admin'
-import Dashboard from '../pages/Dashboard/Dashboard'
-import DashboardForms from '../pages/DashboardForms/DashboardForms'
+
+// Admin 
+import Admin from '../pages/AdminPages/Admin/Admin'
+
+// Dashboard
+import Dashboard from '../pages/DashboardPages/DashboardOverview/Dashboard'
+import DashboardForms from '../pages/DashboardPages/DashboardForms/DashboardForms'
+import FormDetailPage from '../pages/DashboardPages/FormDetailPage/FormDetailPage'
+
 
 interface RouteConfig {
     path: string, 
@@ -24,9 +32,11 @@ export const routes: RouteConfig[] = [
     {path: '/login', element: LoginPage, isProtected: false},
     {path: '/onboarding', element: OnboardingPage, isProtected: true},
     
-    // Content Routes
+    // Dashboard Routes
     {path: '/dashboard/overview', element: Dashboard, isProtected: true},
     {path: '/dashboard/forms', element: DashboardForms, isProtected: true},
+    {path: '/forms/:formId/v/:version', element: FormDetailPage, isProtected: true},
+
 
     // Private Routes
     {path: '/admin', element: Admin ,isProtected:true},

@@ -116,6 +116,17 @@ const TextField: React.FC<TextFieldProps> = ({
         {required && <span className="textfield-required">*</span>}
       </label>
 
+      {helperText && (
+        <div
+          id={`${id}-helper-text`}
+          className={`textfield-helper-text ${
+            validationState ? `textfield-helper-${validationState}` : ""
+          }`}
+        >
+          {helperText}
+        </div>
+      )}
+
       <div className="textfield-input-container">
         {startIcon && (
           <div className="textfield-icon textfield-start-icon">{startIcon}</div>
@@ -146,17 +157,6 @@ const TextField: React.FC<TextFieldProps> = ({
           </button>
         )}
       </div>
-
-      {helperText && (
-        <div
-          id={`${id}-helper-text`}
-          className={`textfield-helper-text ${
-            validationState ? `textfield-helper-${validationState}` : ""
-          }`}
-        >
-          {helperText}
-        </div>
-      )}
     </div>
   );
 };

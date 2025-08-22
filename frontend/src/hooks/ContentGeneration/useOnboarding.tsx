@@ -27,7 +27,7 @@ export const useOnboarding = () => {
 
     try {
       await apiClient.post("/api/users/onboarding/", formData);
-      navigate("/start");
+      navigate("/dashboard/forms");
     } catch (err) {
       setState({
         isLoading: false,

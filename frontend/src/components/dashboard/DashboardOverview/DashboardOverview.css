@@ -1,0 +1,27 @@
+.dashboard-overview-container {
+  max-width: 1200px;
+  margin-left: 280px;
+  padding: 2rem;
+  
+}
+
+.dashboard-overview-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+}
+
+.dashboard-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.dashboard-overview-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+  margin: 1.5rem 0;
+}
