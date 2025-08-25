@@ -92,6 +92,8 @@ class FormDetailView(APIView):
             sections_data.append({
                 "title": section.title, 
                 "description": section.description,
+                "isRepeatable": section.is_repeatable,
+                "repeatableCount": section.repeatable_count, 
                 "fields": fields
             })
 

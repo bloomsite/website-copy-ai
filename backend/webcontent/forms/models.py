@@ -50,6 +50,8 @@ class Form(models.Model):
 class FormSection(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    is_repeatable = models.BooleanField(default=False)
+    repeatable_count = models.SmallIntegerField(default=1)
 
     order = models.PositiveIntegerField(default=0)
     

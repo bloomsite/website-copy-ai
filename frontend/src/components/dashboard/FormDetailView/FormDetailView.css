@@ -49,3 +49,36 @@
 .form-detail-submit {
   margin-top: 1.5rem;
 }
+
+.form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.add-section-button {
+  min-width: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+}
+
+.section-instance {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.section-instance + .section-instance {
+  margin-top: 1rem;
+}
+
+.instance-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--color-subtle-text);
+}

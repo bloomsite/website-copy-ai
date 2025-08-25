@@ -9,6 +9,7 @@ export interface FormField {
 export interface FormSection {
     title: string; 
     description: string; 
+    repeatableCount: number; 
     fields: FormField[]; 
 }
 

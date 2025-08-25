@@ -14,7 +14,7 @@ class FormAdmin(admin.ModelAdmin):
 class FormSectionAdmin(admin.ModelAdmin):
     readonly_fields = ('form_id', 'form_title')
     list_display = ['title', 'form_title']
-    fields = ['title', 'description', 'form', 'form_id', 'form_title']
+    fields = ['title', 'description', 'form', 'form_id', 'form_title', 'is_repeatable', 'repeatable_count']
     
     @admin.display(description="Form Title")
     def form_title(self, obj):
