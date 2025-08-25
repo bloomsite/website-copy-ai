@@ -5,10 +5,6 @@ import "./FormDetailView.css";
 import Card from "../../core/Card/Card";
 import Button from "../../core/Button/Button";
 import FormDetailSection from "./FormDetailSection";
-import type {
-  FormField,
-  FormSection,
-} from "../../../core/Types/typeFormObject";
 
 interface FieldValue {
   [sectionIndex: number]: {

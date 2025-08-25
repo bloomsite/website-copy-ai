@@ -17,8 +17,6 @@ interface FormOverviewState {
 }
 
 export const useFormsOverview = () => {
-  const navigate = useNavigate();
-
   const [state, setState] = useState<FormOverviewState & { forms: Form[] }>({
     isLoading: false,
     error: undefined,

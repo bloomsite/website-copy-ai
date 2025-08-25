@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getIcon } from "../../../core/Utils/getIcon";
 import { useFormsOverview } from "../../../hooks/Forms/useFormsOverview";
 import Card from "../../core/Card/Card";
 import Button from "../../core/Button/Button";
 import "./FormOverview.css";
-
-interface Form {
-  formId: string;
-  title: string;
-  description: string;
-  shortDescription: string;
-  version: string;
-}
 
 const FormOverview: React.FC = () => {
   const navigate = useNavigate();
