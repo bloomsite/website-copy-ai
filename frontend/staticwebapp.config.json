@@ -14,5 +14,13 @@
       "/favicon.ico",
       "/assets/*"
     ]
+  },
+  "mimeTypes": {
+    ".js": "application/javascript",
+    ".mjs": "text/javascript",
+    ".wasm": "application/wasm",
+    ".json": "application/json",
+    ".css": "text/css",
+    ".svg": "image/svg+xml"
   }
 }
