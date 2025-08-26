@@ -10,6 +10,7 @@ export const sidebarItems: SidebarItem[] = [
     title: 'Formulieren',
     icon: 'form',
     route: '/dashboard/forms',
+    active: true,
   },
   {
     title: 'Gegenereerde Content',

@@ -9,7 +9,7 @@
 
   /* color variables */
   /* --color-background: #e6e5e5; */
-  --color-background: #ffffff;
+  --color-background: #F1F5F9;
   --color-surface: #ffffff;
   --color-muted: #e8e4e1;
   --color-border: #d8d3cf;
@@ -61,6 +61,10 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+p {
+    margin: 0px 
 }
 
 button:focus,

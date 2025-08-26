@@ -1,5 +1,5 @@
 .form-detail-container {
-  max-width: 600px;
+  max-width: 860px;
   margin: 2rem auto;
   padding: 2rem;
 }
@@ -21,10 +21,6 @@
   color: var(--color-subtle-text);
 }
 
-.form-detail-form {
-  margin-top: 2rem;
-}
-
 .form-section {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
@@ -37,11 +33,6 @@
   margin-bottom: 0.5rem;
 }
 
-.form-section-description {
-  color: var(--color-subtle-text);
-  margin-bottom: 1rem;
-}
-
 .form-field-row {
   margin-bottom: 1rem;
 }
@@ -50,12 +41,6 @@
   margin-top: 1.5rem;
 }
 
-.form-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
 
 .add-section-button {
   min-width: 40px !important;
@@ -64,17 +49,7 @@
   border-radius: 50% !important;
 }
 
-.section-instance {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-}
 
-.section-instance + .section-instance {
-  margin-top: 1rem;
-}
 
 .instance-title {
   font-size: 1rem;

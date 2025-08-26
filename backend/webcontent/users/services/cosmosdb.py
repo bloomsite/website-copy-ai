@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = CosmosClient(settings.COSMOS['ENDPOINT'], settings.COSMOS['KEY'])
+client = CosmosClient(url=settings.COSMOS['ENDPOINT'], credential=settings.COSMOS['KEY'])
 database = client.get_database_client(settings.COSMOS['DATABASE_USER_DATA'])
 container = database.get_container_client(settings.COSMOS['CONTAINER_USER_PROFILES'])
 

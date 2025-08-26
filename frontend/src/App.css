@@ -1,7 +1,6 @@
 #root {
   margin: 0; 
   padding: 0;
-  text-align: center;
 }
 
 @keyframes logo-spin {
@@ -19,9 +18,6 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
 
 .read-the-docs {
   color: #888;

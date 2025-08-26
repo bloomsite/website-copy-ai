@@ -1,15 +1,15 @@
 .form-section {
-  margin-bottom: 30px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  padding-top: 20px;
 }
 
 .form-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+}
+
+.form-section-description {
+  color: var(--color-subtle-text);
 }
 
 .form-section-title {
@@ -17,16 +17,8 @@
   font-size: 1.2em;
 }
 
-.form-section-description {
-  margin-bottom: 20px;
-  color: #666;
-}
-
 .section-instance {
-  padding: 15px;
   margin-bottom: 15px;
-  border: 1px solid #eee;
-  border-radius: 4px;
   position: relative;
 }
 

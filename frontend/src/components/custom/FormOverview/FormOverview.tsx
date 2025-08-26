@@ -47,7 +47,7 @@ const FormOverview: React.FC = () => {
               ))
           : forms.map((form) => (
               <Card
-                icon={getIcon(form.icon, 35)}
+                // icon={getIcon(form.icon, 35)} even dedeactiveerd voor nu
                 key={form.formId}
                 className="form-card"
                 title={form.title}

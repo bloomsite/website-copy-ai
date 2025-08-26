@@ -16,6 +16,9 @@ const NavigationSidebar: React.FC<NavigationsSidebarProps> = ({
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  // Only display items with active === true
+  const activeSidebarItems = sidebarItems.filter((item) => item.active);
+
   return (
     <div className={`navigation-sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
@@ -29,7 +32,7 @@ const NavigationSidebar: React.FC<NavigationsSidebarProps> = ({
       </div>
 
       <nav className="sidebar-nav">
-        {sidebarItems.map((item) => (
+        {activeSidebarItems.map((item) => (
           <NavLink
             key={item.route}
             to={item.route}

@@ -27,7 +27,12 @@
   padding-bottom: 1rem;
 }
 
+.card-title {
+  text-align: center;
+}
+
 .form-description {
+  text-align: center;
   color: var(--color-subtle-text);
   line-height: 1.5;
   margin: 0;
