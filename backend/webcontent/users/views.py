@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -44,8 +44,6 @@ class UserOnboardingView(APIView):
     
 
 
-
-# Create your views here.
 class RegisterClient(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -120,26 +118,37 @@ class UserListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        user = request.user 
+        user = request.user
 
         if user.role != Role.ADMIN:
             return Response({"error": "You do not have permission to view this resource."}, status=status.HTTP_403_FORBIDDEN)
-        
+
+        users = User.objects.all()
+
         user_role = request.query_params.get('role', None)
         if user_role:
-            users = User.objects.filter(role=user_role)
-        
+            users = users.filter(role=user_role)
 
         user_id = request.query_params.get('id', None)
         if user_id:
             try:
-                user = User.objects.get(uuid=user_id)
-                users = [user]
+                users = [User.objects.get(uuid=user_id)]
             except User.DoesNotExist:
                 return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-        
-        users = User.objects.all()
-        user_data = [
+
+        first_name = request.query_params.get('first_name', None)
+        if first_name:
+            users = users.filter(first_name__icontains=first_name)
+
+        last_name = request.query_params.get('last_name', None)
+        if last_name:
+            users = users.filter(last_name__icontains=last_name)
+
+        email = request.query_params.get('email', None)
+        if email:
+            users = users.filter(email__icontains=email)
+
+        user_data: list[dict] = [
             {
                 "id": str(user.uuid),
                 "email": user.email,
@@ -150,4 +159,51 @@ class UserListView(APIView):
                 "last_login": user.last_login.isoformat() if user.last_login else None
             } for user in users
         ]
+
         return Response(user_data, status=status.HTTP_200_OK)
+    
+class UserDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user 
+
+        if user.role != Role.ADMIN:
+            return Response({"error": "You do not have permission to view this resource."}, status=status.HTTP_403_FORBIDDEN)
+        
+        
+        user_id = request.query_params.get('user_id')
+
+
+        if not user_id:
+            return Response({"error":"a user_id must be provided"}, status=400)
+        
+        try:
+            user = get_object_or_404(User, uuid=user_id)
+            # Get all form submissions for the user
+            forms = user.submissions.all().select_related('form')
+
+            forms_data = [
+                {
+                    "submissionId": str(form.id),
+                    "formId": str(form.form.form_id),
+                    "formName": form.form_name,
+                    "formVersion": str(form.form.version),
+                    "submittedAt": form.submitted_at.isoformat(),
+                    "formData": form.form_data,
+                }
+                for form in forms
+            ]
+
+            user_data = {
+                "firstName": user.first_name,
+                "lastName": user.last_name, 
+                "email": user.email, 
+                "dateJoined": user.date_joined, 
+                "lastLogin": user.last_login, 
+                "companyName": user.company_name, 
+                "formsFilled": forms_data
+            }
+            return Response(user_data, status=200)
+        except Exception as e:
+            return Response({"error": f"an error occured {e}"}, status=500)

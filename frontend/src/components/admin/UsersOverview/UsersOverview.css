@@ -1,0 +1,172 @@
+
+.users-overview-container {
+  padding: 2rem;
+  max-width: 1000px;
+  min-width: 1000px;
+  margin: 2rem auto;
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.users-overview-title {
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.users-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.users-filters input {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: var(--color-surface);
+  transition: border-color 0.2s;
+}
+
+.users-filters input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-hover);
+}
+
+.chip-container {
+  display: flex;
+  align-items: center;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  background: var(--color-muted);
+  color: var(--color-text);
+  cursor: pointer;
+  user-select: none;
+  margin-left: 0.5rem;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.chip:hover {
+  background: var(--color-border);
+}
+
+.chip.active {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+.chip.active:hover {
+  background: var(--color-primary-hover);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.users-table th, .users-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.users-table th {
+  background: var(--color-background);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tbody tr {
+  background: var(--color-surface);
+  transition: background-color 0.2s;
+}
+
+.users-table tbody tr:hover {
+  background: var(--color-muted);
+}
+
+.actions-cell {
+  text-align: right;
+}
+
+.profile-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.profile-button:hover {
+  background: var(--color-primary-hover);
+}
+
+.users-loading {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.users-error {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--color-error);
+  padding: 1rem;
+  background: var(--color-surface);
+  border-radius: 6px;
+  border: 1px solid var(--color-error);
+}
+
+.users-pagination {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.users-pagination button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.users-pagination button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.users-pagination button:disabled {
+  background: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.users-pagination span {
+  font-size: 0.95rem;
+  color: var(--color-text);
+}

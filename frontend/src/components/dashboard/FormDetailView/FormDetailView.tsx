@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSubmitForm } from "../../../hooks/Forms/useSubmitForm";
 import { useParams } from "react-router-dom";
 import { useForm } from "../../../hooks/Forms/useForm";
 import "./FormDetailView.css";
@@ -23,16 +24,25 @@ const FormDetailView: React.FC = () => {
     {}
   );
   const { formId } = useParams<{ formId: string }>();
-  const { form, isLoading, error } = useForm(formId ?? "");
+  const { form, isLoading, error: formError } = useForm(formId ?? "");
+
   const [fieldValues, setFieldValues] = useState<FieldValue>({});
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    submitForm,
+    error,
+    success,
+    isSubmitting: isApiSubmitting,
+  } = useSubmitForm();
 
   if (isLoading) {
     return <div className="form-detail-loading">Laden...</div>;
   }
 
-  if (error) {
-    return <div className="form-detail-error">{error}</div>;
+  if (formError) {
+    return <div className="form-detail-error">{formError}</div>;
   }
 
   if (!form) {
@@ -105,12 +115,35 @@ const FormDetailView: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // You can process or send fieldValues here
-    setTimeout(() => {
-      setIsSubmitting(false);
-      console.log("Form submitted:", fieldValues);
-      alert("Form submitted! Check console for values.");
-    }, 800);
+
+    // Restore answers grouped under section titles, with instances and field labels
+    const answers: any = {};
+    if (Array.isArray(form.sections)) {
+      form.sections.forEach((section: any, sectionIdx: number) => {
+        const sectionFieldValues = fieldValues[sectionIdx] || {};
+        const sectionTitle = section.title || `Section ${sectionIdx + 1}`;
+        answers[sectionTitle] = {};
+        Object.entries(sectionFieldValues).forEach(([instanceIdx, fields]) => {
+          const instanceLabel = `Instance ${parseInt(instanceIdx) + 1}`;
+          answers[sectionTitle][instanceLabel] = {};
+          Object.entries(fields).forEach(([fieldIdx, value]) => {
+            const field = section.fields?.[parseInt(fieldIdx)];
+            const label = field?.label || `Field ${fieldIdx}`;
+            answers[sectionTitle][instanceLabel][label] = value;
+          });
+        });
+      });
+    }
+
+    console.log(answers);
+
+    submitForm(formId ?? "", form.title, answers)
+      .then(() => {
+        setIsSubmitting(false);
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -145,11 +178,21 @@ const FormDetailView: React.FC = () => {
               />
             ))}
           <Button
-            text={isSubmitting ? "Aan het verzenden..." : "Verzenden"}
+            text={
+              isSubmitting || isApiSubmitting
+                ? "Aan het verzenden..."
+                : "Verzenden"
+            }
             type="submit"
-            isLoading={isSubmitting}
+            isLoading={isSubmitting || isApiSubmitting}
             className="form-detail-submit"
           />
+          {error && <div className="form-detail-error">{error}</div>}
+          {success && (
+            <div className="form-detail-success">
+              Formulier succesvol verzonden!
+            </div>
+          )}
         </form>
       </Card>
     </div>

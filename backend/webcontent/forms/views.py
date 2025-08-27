@@ -1,4 +1,6 @@
-from django.shortcuts import render
+import json 
+
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from azure.cosmos import CosmosClient
 
@@ -6,9 +8,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from typing import Any, Dict, List
 
-from .models import Form, FormSection, FormField
+from .models import Form, FormSubmission
 
 def _container():
     client = CosmosClient(
@@ -68,6 +72,7 @@ class FormDetailView(APIView):
     permission_classes = []
     authentication_classes = []
 
+
     def get(self, request, form_id):
         form = (Form.objects
                 .filter(form_id=form_id, is_active=True)
@@ -107,5 +112,47 @@ class FormDetailView(APIView):
             "version": str(form.version),
         }
         return Response(item)
+    
+class FormSubmitView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
+    def post(self, request, *args, **kwargs):
+            
+        user = request.user 
+        data: Dict = request.data 
+
+        form_answers: Dict = data.get("answers")
+        form_id = data.get("formId")
+        form_name = data.get("formName")
+
+        if not user.is_authenticated:
+            return Response({"error": "user isn't authenticated"}, status=401)
+
+        if form_id is None:
+            return Response({"error": "The form id can't be None"}, status=400)
+        
+        if form_name is None:
+            return Response({"error":"Submitted form must include a name"})
+
+        if not form_answers:
+            return Response({"error": "request must include answers"}, status=400)
+        
+        try:
+            form = get_object_or_404(Form, form_id=form_id)
+            submitted_form = FormSubmission.objects.create(
+                user = request.user, 
+                form = form, 
+                form_name = form_name,
+                form_data = form_answers, 
+            )
+
+            submitted_form.save()
+        except json.JSONDecodeError:
+            return Response({"error":"invalid JSON format"}, status=400)
+            
+        return Response({"response": "succeeded"}, status=200)
+
 
 

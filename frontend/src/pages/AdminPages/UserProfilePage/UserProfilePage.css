@@ -1,0 +1,42 @@
+.user-detail-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin:0 0 0 20rem;
+}
+
+.user-detail-page__header {
+    margin-bottom: 24px;
+}
+
+.user-detail-page__title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.user-detail-page__subtitle {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+.user-detail-page__content {
+    display: flex;
+    gap: 24px;
+}
+
+.user-detail-page__forms-section {
+    flex-grow: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .user-detail-page__content {
+        flex-direction: column;
+    }
+
+    .user-detail-page__profile-section {
+        width: 100%;
+    }
+}

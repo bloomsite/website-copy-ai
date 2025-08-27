@@ -1,0 +1,86 @@
+.user-forms-cards {
+    width: 66%;
+    padding: 1rem;
+}
+
+.user-forms-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.user-forms-cards__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.pagination-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 500;
+    min-width: 2.5rem;
+    transition: all 0.2s ease;
+}
+
+.pagination-button:hover {
+    background: var(--color-background);
+}
+
+.pagination-button.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.user-forms-cards__empty {
+    color: var(--color-subtle-text);
+    text-align: center;
+    padding: 2rem;
+    background: var(--color-surface);
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+}
+
+.form-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-card__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.form-card__date {
+    font-size: 0.875rem;
+    color: var(--color-subtle-text);
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .user-forms-cards__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .user-forms-cards {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-forms-cards__grid {
+        grid-template-columns: 1fr;
+    }
+}

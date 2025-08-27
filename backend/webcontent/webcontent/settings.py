@@ -136,30 +136,30 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ############## CUSTOM SETTINGS ##############
 
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-        "null": {
-            "class": "logging.NullHandler",
-        },
-    },
-    "loggers": {
-        "django.request": {
-            "handlers": ["null"],   # swallow the "Internal Server Error" + traceback
-            "level": "ERROR",
-            "propagate": False,
-        },
-        "django.server": {
-            "handlers": ["console"],  # still show the short access log line
-            "level": "INFO",
-            "propagate": False,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#         },
+#         "null": {
+#             "class": "logging.NullHandler",
+#         },
+#     },
+#     "loggers": {
+#         "django.request": {
+#             "handlers": ["null"],   # swallow the "Internal Server Error" + traceback
+#             "level": "ERROR",
+#             "propagate": False,
+#         },
+#         "django.server": {
+#             "handlers": ["console"],  # still show the short access log line
+#             "level": "INFO",
+#             "propagate": False,
+#         },
+#     },
+# }
 
 
 # Custom User Model
@@ -174,8 +174,8 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication', 
     ],
-    # Add auth/permissions here if you want
      'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],

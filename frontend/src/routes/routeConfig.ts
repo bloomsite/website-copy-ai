@@ -15,6 +15,8 @@ import Admin from '../pages/AdminPages/Admin/Admin'
 import Dashboard from '../pages/DashboardPages/DashboardOverview/Dashboard'
 import DashboardForms from '../pages/DashboardPages/DashboardForms/DashboardForms'
 import FormDetailPage from '../pages/DashboardPages/FormDetailPage/FormDetailPage'
+import AdminUsers from '../pages/AdminPages/AdminUsers/AdminUsers'
+import { UserProfilePage } from '../pages/AdminPages/UserProfilePage/UserProfilePage'
 
 
 interface RouteConfig {
@@ -40,4 +42,6 @@ export const routes: RouteConfig[] = [
 
     // Private Routes
     {path: '/admin', element: Admin ,isProtected:true},
+    {path: '/admin/users', element: AdminUsers ,isProtected:true},
+    {path: '/admin/users/:userId', element: UserProfilePage ,isProtected:true},
 ] 

@@ -107,4 +107,16 @@ class FormField(models.Model):
         return self.label
 
     
+class FormSubmission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submissions")
+    form = models.ForeignKey(Form, 
+                             on_delete=models.SET_NULL, null=True,
+                             related_name="submissions")
+    form_name = models.CharField(max_length=255)
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    form_data = models.JSONField()
+
+    def __str__(self):
+        return f"{self.user}'s {self.form_name}"
 

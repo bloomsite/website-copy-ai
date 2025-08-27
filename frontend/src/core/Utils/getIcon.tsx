@@ -7,6 +7,7 @@ import {
   Bot,
   LetterText,
   User,
+  Plus,
 } from "lucide-react";
 
 export const getIcon = (iconName: string, size: number = 20) => {
@@ -27,6 +28,8 @@ export const getIcon = (iconName: string, size: number = 20) => {
       return <LetterText size={size} />;
     case "user":
       return <User size={size} />;
+    case "plus":
+      return <Plus size={size} />;
     default:
       return <Settings size={size} />;
   }
