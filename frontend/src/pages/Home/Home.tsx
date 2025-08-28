@@ -11,7 +11,7 @@ const Home: React.FC = () => {
     if (!token) {
       navigate("/register");
     } else {
-      navigate("/start");
+      navigate("/dashboard/forms");
     }
   };
 
