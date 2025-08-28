@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import { getIcon } from "../../../core/Utils/getIcon";
 import { useFormsOverview } from "../../../hooks/Forms/useFormsOverview";
+import { useUserFormSubmissions } from "../../../hooks/Forms/useUserFormSubmissions";
 import Card from "../../core/Card/Card";
 import Button from "../../core/Button/Button";
 import "./FormOverview.css";
@@ -9,6 +9,7 @@ import "./FormOverview.css";
 const FormOverview: React.FC = () => {
   const navigate = useNavigate();
   const { retrieveForms, forms, isLoading, error } = useFormsOverview();
+  const { isFormSubmitted } = useUserFormSubmissions();
 
   useEffect(() => {
     retrieveForms().catch((err) => {
@@ -47,9 +48,11 @@ const FormOverview: React.FC = () => {
               ))
           : forms.map((form) => (
               <Card
-                // icon={getIcon(form.icon, 35)} even dedeactiveerd voor nu
+                // icon={getIcon(form.icon, 35)} even gedeactiveerd voor nu
                 key={form.formId}
-                className="form-card"
+                className={`form-card ${
+                  isFormSubmitted(form.formId) ? "submitted" : ""
+                }`}
                 title={form.title}
               >
                 <p className="form-description">{form.shortDescription}</p>

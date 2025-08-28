@@ -8,6 +8,10 @@
   background-color: var(--background-color);
 }
 
+.login-card {
+  min-width: 350px; 
+}
+
 .login-form {
   display: flex;
   flex-direction: column;

@@ -26,6 +26,7 @@ export const Login: React.FC<LoginProps> = ({
   return (
     <div className="login-container">
       <Card
+        className="login-card"
         variant="default"
         size="large"
         elevation="medium"

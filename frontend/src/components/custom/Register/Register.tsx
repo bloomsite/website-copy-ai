@@ -5,22 +5,23 @@ import Button from "../../core/Button/Button";
 import "./Register.css";
 
 interface RegisterProps {
-  onRegister: (userData: {
-    email: string;
-    firstName: string;
-    lastName: string;
-    companyName: string;
-    password: string;
-  }) => void;
+  onRegister: (
+    userData: {
+      email: string;
+      firstName: string;
+      lastName: string;
+      companyName: string;
+      password: string;
+    },
+    adminRegistration: boolean
+  ) => void;
   isLoading?: boolean;
   error?: string;
 }
 
-export const Register: React.FC<RegisterProps> = ({
-  onRegister,
-  isLoading = false,
-  error,
-}) => {
+export const Register: React.FC<
+  RegisterProps & { adminRegistration?: boolean }
+> = ({ onRegister, isLoading = false, error, adminRegistration = false }) => {
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -72,7 +73,7 @@ export const Register: React.FC<RegisterProps> = ({
 
     if (validateForm()) {
       const { confirmPassword, ...userData } = formData;
-      onRegister(userData);
+      onRegister(userData, adminRegistration);
     }
   };
 

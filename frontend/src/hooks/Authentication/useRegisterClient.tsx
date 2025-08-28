@@ -16,7 +16,10 @@ interface RegisterState {
 }
 
 interface UseRegisterClient {
-  registerClient: (userData: RegisterData) => Promise<void>;
+  registerClient: (
+    userData: RegisterData,
+    adminRegistration: boolean
+  ) => Promise<void>;
   isLoading: boolean;
   error?: string;
 }
@@ -28,12 +31,15 @@ export const useRegisterClient = (): UseRegisterClient => {
     error: undefined,
   });
 
-  const registerClient = async (userData: RegisterData) => {
+  const registerClient = async (
+    userData: RegisterData,
+    adminRegistration: boolean
+  ) => {
     setState({ isLoading: true, error: undefined });
 
     try {
       // Register the user
-      await apiClient.post("/api/users/register/", {
+      const response = await apiClient.post("/api/users/register/", {
         email: userData.email,
         password: userData.password,
         first_name: userData.firstName,
@@ -41,19 +47,22 @@ export const useRegisterClient = (): UseRegisterClient => {
         company_name: userData.companyName,
       });
 
-      // Automatically log in the user
-      const loginResponse = await apiClient.post("/api/users/token/", {
-        username: userData.email,
-        password: userData.password,
-      });
+      if (adminRegistration !== true) {
+        const loginResponse = await apiClient.post("/api/users/token/", {
+          username: userData.email,
+          password: userData.password,
+        });
 
-      // Store tokens
-      const { access, refresh } = loginResponse.data;
-      localStorage.setItem("access_token", access);
-      localStorage.setItem("refresh_token", refresh);
+        const { access, refresh } = loginResponse.data;
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
 
-      // Redirect to onboarding
-      navigate("/onboarding");
+        navigate("/onboarding");
+      } else {
+        if (response.status == 201) {
+          alert("Gebruiker is aangemaakt");
+        }
+      }
     } catch (err) {
       setState({
         isLoading: false,
@@ -62,6 +71,8 @@ export const useRegisterClient = (): UseRegisterClient => {
             ? err.message
             : "An error occurred during registration. Please try again.",
       });
+    } finally {
+      setState({ ...state, isLoading: false });
     }
   };
 

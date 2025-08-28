@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from azure.cosmos import CosmosClient
 
 from rest_framework.views import APIView
@@ -153,6 +154,29 @@ class FormSubmitView(APIView):
             return Response({"error":"invalid JSON format"}, status=400)
             
         return Response({"response": "succeeded"}, status=200)
+    
+class UserFormSubmissionsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        request_user_uuid = request.user.uuid
+
+        User = get_user_model()
+        user = get_object_or_404(User, uuid=request_user_uuid)
+
+        submissions = FormSubmission.objects.filter(user=user).order_by('-submitted_at')
+        
+        submissions_data = [{
+            "submissionId": str(submission.id),
+            "formId": submission.form.form_id,
+            "formName": submission.form_name,
+            "formVersion": str(submission.form.version),
+            "submittedAt": submission.submitted_at.isoformat(),
+            "formData": submission.form_data
+        } for submission in submissions]
+
+        return Response(submissions_data, status=status.HTTP_200_OK)
+
 
 
 

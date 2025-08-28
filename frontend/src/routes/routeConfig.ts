@@ -17,6 +17,7 @@ import DashboardForms from '../pages/DashboardPages/DashboardForms/DashboardForm
 import FormDetailPage from '../pages/DashboardPages/FormDetailPage/FormDetailPage'
 import AdminUsers from '../pages/AdminPages/AdminUsers/AdminUsers'
 import { UserProfilePage } from '../pages/AdminPages/UserProfilePage/UserProfilePage'
+import InviteUser from '../pages/AdminPages/InviteUsers/InviteUsers'
 
 
 interface RouteConfig {
@@ -44,4 +45,5 @@ export const routes: RouteConfig[] = [
     {path: '/admin', element: Admin ,isProtected:true},
     {path: '/admin/users', element: AdminUsers ,isProtected:true},
     {path: '/admin/users/:userId', element: UserProfilePage ,isProtected:true},
+    {path: '/admin/invite', element: InviteUser ,isProtected:true},
 ] 

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { UserProfileCard } from "../../../components/admin/UserProfileCard/UserProfileCard";
 import { UserFormsCards } from "../../../components/admin/UserFormsCards/UserFormsCards";
+import { FormDetailModal } from "../../../components/admin/FormDetailModal/FormDetailModal";
 import { useUserDetail } from "../../../hooks/Users/useUserDetail";
 import type { FormSubmission } from "../../../hooks/Users/useUserDetail";
 import "./UserProfilePage.css";
@@ -11,6 +12,7 @@ import { sidebarItems } from "../../../core/Constants/sidebarItemsAdmin";
 export const UserProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const { userDetail, loading, error } = useUserDetail(userId);
+  const [selectedForm, setSelectedForm] = useState<FormSubmission | null>(null);
   if (loading) {
     return (
       <div className="user-detail-page">
@@ -59,13 +61,16 @@ export const UserProfilePage: React.FC = () => {
           </div>
           <UserFormsCards
             forms={userDetail.formsFilled}
-            onViewForm={(form: FormSubmission) => {
-              // TODO: Implement form view logic
-              console.log("Opening form:", form);
-            }}
+            onViewForm={(form: FormSubmission) => setSelectedForm(form)}
           />
         </div>
       </div>
+      {selectedForm && (
+        <FormDetailModal
+          form={selectedForm}
+          onClose={() => setSelectedForm(null)}
+        />
+      )}
     </>
   );
 };

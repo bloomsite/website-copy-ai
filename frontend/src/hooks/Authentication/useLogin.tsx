@@ -45,9 +45,9 @@ export const useLogin = () => {
 
       // Redirect based on role
       if (role === "CLIENT") {
-        navigate("/onboarding");
+        navigate("/dashboard");
       } else {
-        navigate("/");
+        navigate("/admin");
       }
     } catch (err: any) {
       const errorMessage =

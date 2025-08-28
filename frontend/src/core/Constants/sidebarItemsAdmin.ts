@@ -32,7 +32,7 @@ export const sidebarItems: SidebarItem[] = [
     active: true, 
   },
   {
-    title: 'Settings',
+    title: 'Instellingen',
     icon: 'settings',
     route: '/admin/settings',
     active: true, 

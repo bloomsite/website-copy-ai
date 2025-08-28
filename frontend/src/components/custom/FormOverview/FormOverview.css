@@ -21,6 +21,20 @@
 .form-card {
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.form-card.submitted::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(40, 167, 69, 0.1);
+  border: 2px solid rgba(40, 167, 69, 0.5);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .form-card .card-header {
