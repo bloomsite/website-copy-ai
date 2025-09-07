@@ -61,6 +61,7 @@ const FormOverview: React.FC = () => {
                     text="Invullen"
                     onClick={() => handleFillForm(form.formId, form.version)}
                     className="fill-form-button"
+                    disabled={isFormSubmitted(form.formId) ? true : false}
                   />
                 </div>
               </Card>

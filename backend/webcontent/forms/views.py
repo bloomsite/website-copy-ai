@@ -105,6 +105,7 @@ class FormDetailView(APIView):
                 "type": field.field_type, 
                 "required": field.is_required, 
                 "placeholder": field.placeholder, 
+                "options": field.options, 
                 }
                 for field in section.fields.all()
             ]

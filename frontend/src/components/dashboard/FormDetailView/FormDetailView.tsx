@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSubmitForm } from "../../../hooks/Forms/useSubmitForm";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "../../../hooks/Forms/useForm";
 import "./FormDetailView.css";
 import Card from "../../core/Card/Card";
 import Button from "../../core/Button/Button";
+import Modal from "../../core/Modal/Modal";
 import FormDetailSection from "./FormDetailSection";
 import { useFormProgress } from "../../../hooks/Database/useFormProgress";
 
@@ -13,9 +14,13 @@ interface SectionInstances {
 }
 
 const FormDetailView: React.FC = () => {
+  const navigate = useNavigate();
   const [sectionInstances, setSectionInstances] = useState<SectionInstances>(
     {}
   );
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [formDataToSubmit, setFormDataToSubmit] = useState<any>(null);
+
   const { formId } = useParams<{ formId: string }>();
   const { form, isLoading, error: formError } = useForm(formId ?? "");
 
@@ -148,9 +153,19 @@ const FormDetailView: React.FC = () => {
     }
   };
 
+  const handleSubmitConfirm = async () => {
+    setIsSubmitting(true);
+    try {
+      await submitForm(formId ?? "", form.title, formDataToSubmit);
+      setShowConfirmModal(false);
+      navigate("/dashboard/forms");
+    } catch (err) {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     // Restore answers grouped under section titles, with instances and field labels
     const final: any = {};
@@ -171,13 +186,8 @@ const FormDetailView: React.FC = () => {
       });
     }
 
-    submitForm(formId ?? "", form.title, final)
-      .then(() => {
-        setIsSubmitting(false);
-      })
-      .catch(() => {
-        setIsSubmitting(false);
-      });
+    setFormDataToSubmit(final);
+    setShowConfirmModal(true);
   };
 
   return (
@@ -229,6 +239,18 @@ const FormDetailView: React.FC = () => {
           )}
         </form>
       </Card>
+
+      <Modal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleSubmitConfirm}
+        title="Formulier Bevestigen"
+      >
+        <p>
+          Weet u zeker dat u dit formulier wilt verzenden? Na verzending kunt u
+          geen wijzigingen meer aanbrengen.
+        </p>
+      </Modal>
     </div>
   );
 };

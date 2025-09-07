@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "../../core/TextField/TextField";
+import Select from "../../core/Select/Select";
 import Button from "../../core/Button/Button";
 import type { FormField } from "../../../core/Types/typeFormObject";
 import "./FormDetailSection.css";
@@ -67,20 +68,50 @@ const FormDetailSection: React.FC<FormDetailSectionProps> = ({
           {Array.isArray(section.fields) &&
             section.fields.map((field: FormField, fieldIdx: number) => (
               <div key={fieldIdx} className="form-field-row">
-                <TextField
-                  helperText={field.description}
-                  size={"large"}
-                  id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
-                  label={field.label}
-                  value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
-                  onChange={(value) =>
-                    onFieldChange(instanceIdx, fieldIdx, value)
-                  }
-                  multiline={field.type === "text_area"}
-                  required={field.required}
-                  className="form-field-input"
-                  placeholder={field.placeholder}
-                />
+                {field.type === "select" || field.type === "select_few" ? (
+                  <Select
+                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                    label={field.label}
+                    value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
+                    onChange={(value) =>
+                      onFieldChange(instanceIdx, fieldIdx, value)
+                    }
+                    options={
+                      field.options?.map(
+                        (opt): { value: string; label: string } =>
+                          typeof opt === "object" &&
+                          opt !== null &&
+                          "value" in opt &&
+                          "label" in opt
+                            ? {
+                                value: String(opt.value),
+                                label: String(opt.label),
+                              }
+                            : { value: String(opt), label: String(opt) }
+                      ) ?? []
+                    }
+                    helperText={field.description}
+                    required={field.required}
+                    className="form-field-input"
+                    placeholder={field.placeholder || "Selecteer een optie..."}
+                    size="large"
+                  />
+                ) : (
+                  <TextField
+                    helperText={field.description}
+                    size={"large"}
+                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                    label={field.label}
+                    value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
+                    onChange={(value) =>
+                      onFieldChange(instanceIdx, fieldIdx, value)
+                    }
+                    multiline={field.type === "text_area"}
+                    required={field.required}
+                    className="form-field-input"
+                    placeholder={field.placeholder}
+                  />
+                )}
               </div>
             ))}
         </div>

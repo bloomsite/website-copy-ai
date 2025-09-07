@@ -3,7 +3,8 @@ export interface FormField {
     description: string; 
     type: string; 
     required: boolean;
-    placeholder: string; 
+    placeholder: string;
+    options?: (string | { value: string; label: string })[];  // Support both string and {value, label} options
 }
 
 export interface FormSection {
