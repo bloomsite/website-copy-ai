@@ -8,7 +8,7 @@ class FormAdmin(admin.ModelAdmin):
 
     @admin.display(description="Form Sections")
     def form_sections(self, obj):
-        return obj.sections if obj.sections is not None else 'not found nigga'
+        return obj.sections if obj.sections is not None else 'not found'
 
 @admin.register(FormSection)
 class FormSectionAdmin(admin.ModelAdmin):
@@ -23,7 +23,16 @@ class FormSectionAdmin(admin.ModelAdmin):
 
 @admin.register(FormField)
 class FormFieldAdmin(admin.ModelAdmin):
-    pass 
+    list_display = ['label', 'form_section_display', 'field_type', 'is_required', 'order']
+    list_filter = ['form_section__form', 'form_section', 'field_type', 'is_required']
+    search_fields = ['label', 'description', 'form_section__title']
+    ordering = ['form_section__form', 'form_section', 'order']
+
+    @admin.display(description="Form Section")
+    def form_section_display(self, obj):
+        if obj.form_section:
+            return f"{obj.form_section.form.title} - {obj.form_section.title}"
+        return "—"
 
 @admin.register(FormSubmission)
 class FormSubmissionAdmin(admin.ModelAdmin):
