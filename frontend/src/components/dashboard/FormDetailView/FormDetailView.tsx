@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSubmitForm } from "../../../hooks/Forms/useSubmitForm";
 import { useParams } from "react-router-dom";
 import { useForm } from "../../../hooks/Forms/useForm";
@@ -6,17 +6,10 @@ import "./FormDetailView.css";
 import Card from "../../core/Card/Card";
 import Button from "../../core/Button/Button";
 import FormDetailSection from "./FormDetailSection";
-
-interface FieldValue {
-  [sectionIndex: number]: {
-    [instanceIndex: number]: {
-      [fieldIndex: number]: string;
-    };
-  };
-}
+import { useFormProgress } from "../../../hooks/Database/useFormProgress";
 
 interface SectionInstances {
-  [sectionIndex: number]: number; // number of instances for each section
+  [sectionIndex: number]: number;
 }
 
 const FormDetailView: React.FC = () => {
@@ -26,8 +19,6 @@ const FormDetailView: React.FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const { form, isLoading, error: formError } = useForm(formId ?? "");
 
-  const [fieldValues, setFieldValues] = useState<FieldValue>({});
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -36,6 +27,43 @@ const FormDetailView: React.FC = () => {
     success,
     isSubmitting: isApiSubmitting,
   } = useSubmitForm();
+
+  useEffect(() => {}, [form?.version]);
+
+  const { answers, setAnswers, setOneAnswer } = useFormProgress({
+    userId: window.localStorage.getItem("user_uuid"),
+    formId: formId ?? "",
+    formVersion: form?.version || "7",
+    token: window.localStorage.getItem("access_token"),
+    debounceMs: 800,
+  });
+
+  useEffect(() => {
+    // Only process answers if we have a valid form version
+    if (form?.version && Array.isArray(form.sections)) {
+      const inst: SectionInstances = {};
+
+      // For each section, count the number of instances from the answers
+      Object.entries(answers || {}).forEach(([sectionIdxStr, sectionData]) => {
+        const sectionIdx = Number(sectionIdxStr);
+        const instanceCount = Object.keys(sectionData || {}).length;
+        if (instanceCount > 0) {
+          inst[sectionIdx] = instanceCount - 1; // Subtract 1 because first instance is not counted
+        } else {
+          inst[sectionIdx] = 0;
+        }
+      });
+
+      // Make sure all sections are initialized
+      form.sections.forEach((_, idx: number) => {
+        if (!(idx in inst)) {
+          inst[idx] = 0;
+        }
+      });
+
+      setSectionInstances(inst);
+    }
+  }, [form?.version, answers]);
 
   if (isLoading) {
     return <div className="form-detail-loading">Laden...</div>;
@@ -59,20 +87,23 @@ const FormDetailView: React.FC = () => {
     });
 
     // Clear the field values for this instance and shift the remaining values
-    setFieldValues((prev) => {
-      const sectionValues = { ...prev[sectionIdx] };
-      for (
-        let i = instanceIdx;
-        i < Object.keys(sectionValues).length - 1;
-        i++
-      ) {
-        sectionValues[i] = sectionValues[i + 1];
+    setAnswers((prev) => {
+      const next = { ...(prev || {}) };
+
+      const sectionBlock = { ...(next[sectionIdx] || {}) };
+      const instanceKeys = Object.keys(sectionBlock)
+        .map(Number)
+        .sort((a, b) => a - b);
+
+      // shift left from removed index
+      for (let i = instanceIdx; i < instanceKeys.length - 1; i++) {
+        sectionBlock[i] = sectionBlock[i + 1];
       }
-      delete sectionValues[Object.keys(sectionValues).length - 1];
-      return {
-        ...prev,
-        [sectionIdx]: sectionValues,
-      };
+      // remove the last one (now duplicated)
+      delete sectionBlock[instanceKeys.length - 1];
+
+      next[sectionIdx] = sectionBlock;
+      return next;
     });
   };
 
@@ -82,16 +113,7 @@ const FormDetailView: React.FC = () => {
     fieldIdx: number,
     value: string
   ) => {
-    setFieldValues((prev) => ({
-      ...prev,
-      [sectionIdx]: {
-        ...prev[sectionIdx],
-        [instanceIdx]: {
-          ...prev[sectionIdx]?.[instanceIdx],
-          [fieldIdx]: value,
-        },
-      },
-    }));
+    setOneAnswer(sectionIdx, instanceIdx, fieldIdx, value);
   };
 
   const addSectionInstance = (sectionIdx: number) => {
@@ -105,11 +127,25 @@ const FormDetailView: React.FC = () => {
         return prev;
       }
 
+      const newCount = currentInstances + 1;
       return {
         ...prev,
-        [sectionIdx]: currentInstances + 1,
+        [sectionIdx]: newCount,
       };
     });
+
+    // Initialize empty fields for the new instance if needed
+    const currentAnswers = answers?.[sectionIdx] || {};
+    const nextInstanceIdx = Object.keys(currentAnswers).length;
+    if (!currentAnswers[nextInstanceIdx]) {
+      setAnswers((prev) => ({
+        ...prev,
+        [sectionIdx]: {
+          ...currentAnswers,
+          [nextInstanceIdx]: {},
+        },
+      }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -117,27 +153,25 @@ const FormDetailView: React.FC = () => {
     setIsSubmitting(true);
 
     // Restore answers grouped under section titles, with instances and field labels
-    const answers: any = {};
+    const final: any = {};
     if (Array.isArray(form.sections)) {
       form.sections.forEach((section: any, sectionIdx: number) => {
-        const sectionFieldValues = fieldValues[sectionIdx] || {};
+        const sectionFieldValues = answers?.[sectionIdx] || {};
         const sectionTitle = section.title || `Section ${sectionIdx + 1}`;
-        answers[sectionTitle] = {};
+        final[sectionTitle] = {};
         Object.entries(sectionFieldValues).forEach(([instanceIdx, fields]) => {
           const instanceLabel = `Instance ${parseInt(instanceIdx) + 1}`;
-          answers[sectionTitle][instanceLabel] = {};
+          final[sectionTitle][instanceLabel] = {};
           Object.entries(fields).forEach(([fieldIdx, value]) => {
             const field = section.fields?.[parseInt(fieldIdx)];
             const label = field?.label || `Field ${fieldIdx}`;
-            answers[sectionTitle][instanceLabel][label] = value;
+            final[sectionTitle][instanceLabel][label] = value;
           });
         });
       });
     }
 
-    console.log(answers);
-
-    submitForm(formId ?? "", form.title, answers)
+    submitForm(formId ?? "", form.title, final)
       .then(() => {
         setIsSubmitting(false);
       })
@@ -163,7 +197,7 @@ const FormDetailView: React.FC = () => {
                 section={section}
                 sectionIdx={sectionIdx}
                 instances={sectionInstances[sectionIdx] || 0}
-                fieldValues={fieldValues[sectionIdx] || {}}
+                fieldValues={answers?.[sectionIdx] || {}}
                 onFieldChange={(
                   instanceIdx: number,
                   fieldIdx: number,

@@ -89,7 +89,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['role'] = self.user.role
         data['email'] = self.user.email
         data['name'] = self.user.first_name
-        data['id'] = self.user.id
+        data['uuid'] = self.user.uuid
 
         return data
     

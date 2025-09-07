@@ -13,7 +13,7 @@ interface LoginResponse {
   role: string;
   email: string;
   name: string;
-  id: string;
+  uuid: string;
 }
 
 export const useLogin = () => {
@@ -35,13 +35,13 @@ export const useLogin = () => {
         }
       );
 
-      const { access, refresh, role, email, name, id } = loginResponse.data;
+      const { access, refresh, role, email, name, uuid } = loginResponse.data;
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
       localStorage.setItem("user_role", role);
       localStorage.setItem("user_email", email);
       localStorage.setItem("user_name", name);
-      localStorage.setItem("user_id", id);
+      localStorage.setItem("user_uuid", uuid);
 
       // Redirect based on role
       if (role === "CLIENT") {

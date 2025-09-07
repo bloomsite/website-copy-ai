@@ -17,7 +17,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({}) => {
           onRegister={registerClient}
           isLoading={isLoading}
           error={error}
-          adminRegistration={true}
+          adminRegistration={false}
         />
       </div>
     </>
