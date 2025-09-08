@@ -3,7 +3,6 @@ import Card from "../../components/core/Card/Card";
 import TextField from "../../components/core/TextField/TextField";
 import Select from "../../components/core/Select/Select";
 import Button from "../../components/core/Button/Button";
-import Navbar from "../../components/core/Navbar/Navbar";
 import { useOnboarding } from "../../hooks/ContentGeneration/useOnboarding";
 import "./OnboardingPage.css";
 
@@ -32,7 +31,6 @@ const OnboardingPage: React.FC = () => {
 
   return (
     <>
-      <Navbar />
       <div className="onboarding-page">
         <div className="onboarding-container">
           {/* Left side - Information Card */}

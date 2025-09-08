@@ -1,32 +1,41 @@
-import 'react'
-import Home from '../pages/Home/Home'
-import Start from '../pages/Start/Start'
-import ContentWriter from '../pages/ContentWriter/ContentWriter'
+import React from 'react'
+
+// Lazy-loaded page components to avoid loading them all on first render
+const Home = React.lazy(() => import('../pages/Home/Home'))
+const Start = React.lazy(() => import('../pages/Start/Start'))
+const ContentWriter = React.lazy(() => import('../pages/ContentWriter/ContentWriter'))
 
 // Authentication
-import RegisterPage from '../pages/RegisterPage/RegisterPage'
-import OnboardingPage from '../pages/OnboardingPage/OnboardingPage'
-import LoginPage from '../pages/LoginPage/LoginPage'
+const RegisterPage = React.lazy(() => import('../pages/RegisterPage/RegisterPage'))
+const OnboardingPage = React.lazy(() => import('../pages/OnboardingPage/OnboardingPage'))
+const LoginPage = React.lazy(() => import('../pages/LoginPage/LoginPage'))
 
 // Admin 
-import Admin from '../pages/AdminPages/Admin/Admin'
+const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
 
 // Dashboard
-import Dashboard from '../pages/DashboardPages/DashboardOverview/Dashboard'
-import DashboardForms from '../pages/DashboardPages/DashboardForms/DashboardForms'
-import FormDetailPage from '../pages/DashboardPages/FormDetailPage/FormDetailPage'
-import AdminUsers from '../pages/AdminPages/AdminUsers/AdminUsers'
-import { UserProfilePage } from '../pages/AdminPages/UserProfilePage/UserProfilePage'
-import InviteUser from '../pages/AdminPages/InviteUsers/InviteUsers'
+const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
+const DashboardForms = React.lazy(() => import('../pages/DashboardPages/DashboardForms/DashboardForms'))
+const FormDetailPage = React.lazy(() => import('../pages/DashboardPages/FormDetailPage/FormDetailPage'))
+const AdminUsers = React.lazy(() => import('../pages/AdminPages/AdminUsers/AdminUsers'))
+// UserProfilePage is a named export; map it to default for React.lazy
+const UserProfilePage = React.lazy(() =>
+    import('../pages/AdminPages/UserProfilePage/UserProfilePage').then((mod) => ({
+        default: (mod as any).UserProfilePage || (mod as any).default,
+    }))
+)
+const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/InviteUsers'))
 
 
 interface RouteConfig {
-    path: string, 
-    element: React.FC, 
-    isProtected: Boolean, 
+    path: string,
+    // using LazyExoticComponent so TS knows these are lazy components
+    // allow any ComponentType to be safe for both function and class components
+    element: React.LazyExoticComponent<React.ComponentType<any>>,
+    isProtected: boolean,
 }
 
-export const routes: RouteConfig[] = [
+export const routes: RouteConfig[]  = [
     // Public Routes
     {path: '/', element: Home, isProtected: false},
     {path: '/start', element: Start, isProtected: false},

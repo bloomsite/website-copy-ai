@@ -9,7 +9,7 @@ const Home: React.FC = () => {
   const handleNavigate = () => {
     const token = localStorage.getItem("access_token");
     if (!token) {
-      navigate("/register");
+      navigate("/login");
     } else {
       navigate("/dashboard/forms");
     }

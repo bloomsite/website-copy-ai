@@ -44,8 +44,8 @@ export const useLogin = () => {
       localStorage.setItem("user_uuid", uuid);
 
       // Redirect based on role
-      if (role === "CLIENT") {
-        navigate("/dashboard");
+      if (role === "client") {
+        navigate("/dashboard/forms");
       } else {
         navigate("/admin");
       }

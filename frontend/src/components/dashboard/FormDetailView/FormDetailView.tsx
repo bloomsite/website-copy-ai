@@ -38,7 +38,7 @@ const FormDetailView: React.FC = () => {
   const { answers, setAnswers, setOneAnswer } = useFormProgress({
     userId: window.localStorage.getItem("user_uuid"),
     formId: formId ?? "",
-    formVersion: form?.version || "7",
+    formVersion: form?.version || "0",
     token: window.localStorage.getItem("access_token"),
     debounceMs: 800,
   });
