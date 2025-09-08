@@ -30,28 +30,53 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      
+    // Check if error is 401 and this isn't already a refresh token request
+    if (
+      error.response?.status === 401 && 
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/api/users/token/refresh/')
+    ) {
       const refreshToken = localStorage.getItem('refresh_token');
-      if (refreshToken) {
-        try {
-          const response = await apiClient.post('/api/users/token/refresh/', {
-            refresh: refreshToken
-          });
-          
-          const { access } = response.data;
-          localStorage.setItem('access_token', access);
-          
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          return apiClient(originalRequest);
-        } catch (refreshError) {
-          // Refresh failed, redirect to login
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          window.location.href = '/login';
-        }
+      
+      // If no refresh token, clear auth and redirect to login
+      if (!refreshToken) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/login';
+        return Promise.reject(error);
       }
+
+      try {
+        // Mark the request as retried to prevent infinite loops
+        originalRequest._retry = true;
+
+        // Create a new instance for refresh request to avoid interceptor loop
+        const refreshResponse = await axios.post(
+          `${baseURL}/api/users/token/refresh/`,
+          { refresh: refreshToken },
+          { withCredentials: false }
+        );
+          
+        const { access } = refreshResponse.data;
+        localStorage.setItem('access_token', access);
+          
+        // Retry original request with new token
+        originalRequest.headers.Authorization = `Bearer ${access}`;
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // Clear auth and redirect on refresh failure
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
+    }
+    
+    // If it's a 401 on refresh token endpoint or any other error, reject
+    if (error.response?.status === 401 && originalRequest.url?.includes('/api/users/token/refresh/')) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = '/login';
     }
     
     return Promise.reject(error);
