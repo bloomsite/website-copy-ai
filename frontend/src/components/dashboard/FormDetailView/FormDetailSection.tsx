@@ -1,6 +1,7 @@
 import React from "react";
 import TextField from "../../core/TextField/TextField";
 import Select from "../../core/Select/Select";
+import Multiselect from "../../core/Multiselect/Multiselect";
 import Button from "../../core/Button/Button";
 import type { FormField } from "../../../core/Types/typeFormObject";
 import "./FormDetailSection.css";
@@ -68,7 +69,37 @@ const FormDetailSection: React.FC<FormDetailSectionProps> = ({
           {Array.isArray(section.fields) &&
             section.fields.map((field: FormField, fieldIdx: number) => (
               <div key={fieldIdx} className="form-field-row">
-                {field.type === "select" || field.type === "select_few" ? (
+                {field.type === "multiselect" ? (
+                  <Multiselect
+                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                    label={field.label}
+                    values={(fieldValues[instanceIdx]?.[fieldIdx] ?? "")
+                      .split(",")
+                      .filter(Boolean)}
+                    onChange={(values) =>
+                      onFieldChange(instanceIdx, fieldIdx, values.join(","))
+                    }
+                    options={
+                      field.options?.map(
+                        (opt): { value: string; label: string } =>
+                          typeof opt === "object" &&
+                          opt !== null &&
+                          "value" in opt &&
+                          "label" in opt
+                            ? {
+                                value: String(opt.value),
+                                label: String(opt.label),
+                              }
+                            : { value: String(opt), label: String(opt) }
+                      ) ?? []
+                    }
+                    helperText={field.description}
+                    required={field.required}
+                    className="form-field-input"
+                    placeholder={field.placeholder || "Selecteer opties..."}
+                    size="large"
+                  />
+                ) : field.type === "select" || field.type === "select_few" ? (
                   <Select
                     id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
                     label={field.label}

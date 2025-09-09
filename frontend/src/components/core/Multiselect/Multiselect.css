@@ -1,0 +1,222 @@
+.multiselect-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  position: relative;
+}
+
+.multiselect-label {
+  font-weight: 500;
+  color: var(--color-text);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.multiselect-required {
+  color: var(--color-error);
+}
+
+.multiselect-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.multiselect-input {
+  width: 100%;
+  padding: 0.75rem;
+  padding-right: 2.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.multiselect-placeholder {
+  color: var(--color-subtle-text);
+}
+
+/* Size variants */
+.multiselect-small .multiselect-input {
+  padding: 0.5rem;
+  padding-right: 2rem;
+  font-size: 0.875rem;
+  min-height: 36px;
+}
+
+.multiselect-large .multiselect-input {
+  padding: 1rem;
+  padding-right: 3rem;
+  font-size: 1.125rem;
+  min-height: 48px;
+}
+
+/* Custom arrow */
+.multiselect-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-subtle-text);
+  pointer-events: none;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.multiselect-open .multiselect-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Options dropdown */
+.multiselect-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 10;
+  padding: 0.5rem 0;
+  list-style: none;
+}
+
+.multiselect-option {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.multiselect-option:hover {
+  background-color: var(--color-hover);
+}
+
+.multiselect-option.selected {
+  background-color: var(--color-hover);
+}
+
+/* Checkbox styles */
+.multiselect-checkbox {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+.multiselect-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.multiselect-option.selected .checkbox-custom {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.multiselect-option.selected .checkbox-custom::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* States */
+.multiselect-input:hover:not(.multiselect-disabled) {
+  border-color: var(--color-text);
+}
+
+.multiselect-focused .multiselect-input {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(168, 213, 186, 0.2);
+}
+
+.multiselect-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.multiselect-disabled .multiselect-input {
+  background-color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* Validation states */
+.multiselect-error .multiselect-input {
+  border-color: var(--color-error);
+}
+
+.multiselect-error .multiselect-input:focus {
+  box-shadow: 0 0 0 3px rgba(230, 70, 70, 0.2);
+}
+
+.multiselect-success .multiselect-input {
+  border-color: var(--color-valid);
+}
+
+.multiselect-success .multiselect-input:focus {
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.multiselect-warning .multiselect-input {
+  border-color: var(--color-secondary);
+}
+
+.multiselect-warning .multiselect-input:focus {
+  box-shadow: 0 0 0 3px rgba(246, 214, 189, 0.2);
+}
+
+/* Helper text */
+.multiselect-helper-text {
+  font-size: 0.875rem;
+  color: var(--color-subtle-text);
+  margin-top: 0.25rem;
+}
+
+.multiselect-helper-error {
+  color: var(--color-error);
+}
+
+.multiselect-helper-success {
+  color: var(--color-valid);
+}
+
+.multiselect-helper-warning {
+  color: var(--color-secondary);
+}
