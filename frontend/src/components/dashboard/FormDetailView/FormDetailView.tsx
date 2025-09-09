@@ -192,11 +192,7 @@ const FormDetailView: React.FC = () => {
 
   return (
     <div className="form-detail-container">
-      <Card
-        title={form.title}
-        subtitle={`Version: ${form.version}`}
-        className="form-card"
-      >
+      <Card title={form.title} className="form-card">
         <p className="form-detail-description">{form.description}</p>
         <p className="form-detail-short">{form.shortDescription}</p>
         <form className="form-detail-form" onSubmit={handleSubmit}>
