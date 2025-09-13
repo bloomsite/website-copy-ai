@@ -59,7 +59,7 @@ export const exportFormToPDF = (form: FormSubmission) => {
         yPosition += 3;
 
         // Add Instances
-        Object.entries(instances).forEach(([i, fields], instanceIndex) => {
+        Object.entries(instances).forEach(([_, fields], instanceIndex) => {
             if (instanceIndex > 0) yPosition += 3;
             
             // Add Fields
@@ -70,7 +70,7 @@ export const exportFormToPDF = (form: FormSubmission) => {
                     yPosition = 20;
                 }
                 
-                const fieldText = `${i} ${fieldName}: ${value}`;
+                const fieldText = `${fieldName}: ${value}`;
                 yPosition = addText(fieldText, yPosition, 12);
             });
         });
