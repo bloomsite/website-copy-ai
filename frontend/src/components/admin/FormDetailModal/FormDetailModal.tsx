@@ -1,6 +1,6 @@
 import React from "react";
 import type { FormSubmission } from "../../../hooks/Users/useUserDetail";
-import { exportFormToPDF } from "../../../core/Utils/pdfExport";
+import { newExportFormToPDF } from "../../../core/Utils/newPdfExport";
 import "./FormDetailModal.css";
 
 interface FormDetailModalProps {
@@ -56,7 +56,7 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
         <div className="form-detail-modal__actions">
           <button
             className="form-detail-modal__button form-detail-modal__button--export"
-            onClick={() => exportFormToPDF(form)}
+            onClick={() => newExportFormToPDF(form)}
           >
             PDF Exporteren
           </button>
