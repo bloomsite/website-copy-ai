@@ -52,6 +52,10 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
           <div>
             <strong>Ingediend op:</strong> {formatDate(form.submittedAt)}
           </div>
+          <div>
+            <strong>ProgressionID:</strong>{" "}
+            {`form:${form.formId}version${form.formVersion}`}
+          </div>
         </div>
         <div className="form-detail-modal__actions">
           <button
