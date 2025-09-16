@@ -36,7 +36,9 @@ class FormFieldAdmin(admin.ModelAdmin):
 
 @admin.register(FormSubmission)
 class FormSubmissionAdmin(admin.ModelAdmin):
-    pass 
+    list_filter = ['user', 'form_name']
+    search_fields = ['user', 'form_name']
+    list_display = ['user', 'form_name']
 
 
 # comment for commit 
