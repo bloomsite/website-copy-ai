@@ -41,6 +41,10 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({ user }) => {
           <span className="user-profile-card__info-value">{user.email}</span>
         </div>
         <div className="user-profile-card__info-item">
+          <span className="user-profile-card__info-label">UUID</span>
+          <span className="user-profile-card__info-value">{user.uuid}</span>
+        </div>
+        <div className="user-profile-card__info-item">
           <span className="user-profile-card__info-label">Lid sinds</span>
           <span className="user-profile-card__info-value">
             {formatDate(user.dateJoined)}

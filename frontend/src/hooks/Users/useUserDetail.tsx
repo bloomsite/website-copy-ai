@@ -24,6 +24,7 @@ export interface UserDetail {
   firstName: string;
   lastName: string;
   email: string;
+  uuid: string;
   dateJoined: string;
   lastLogin: string | null;
   companyName: string;

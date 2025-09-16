@@ -199,6 +199,7 @@ class UserDetailView(APIView):
                 "firstName": user.first_name,
                 "lastName": user.last_name, 
                 "email": user.email, 
+                "uuid": user.uuid, 
                 "dateJoined": user.date_joined, 
                 "lastLogin": user.last_login, 
                 "companyName": user.company_name, 
