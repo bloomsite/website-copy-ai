@@ -2,8 +2,8 @@
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  margin-left: 280px; /* Add margin for sidebar - adjust this value based on your sidebar width */
-  width: calc(100% - 280px); /* Adjust content width to account for sidebar */
+  margin-left: var(--navigation-sidebar-width); /* Add margin for sidebar - adjust this value based on your sidebar width */
+  width: calc(100% - var(--navigation-sidebar-width)); /* Adjust content width to account for sidebar */
 }
 
 .form-overview-title {

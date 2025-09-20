@@ -1,6 +1,6 @@
 .dashboard-overview-container {
   max-width: 1200px;
-  margin-left: 280px;
+  margin-left: var(--navigation-sidebar-width);
   padding: 2rem;
   
 }

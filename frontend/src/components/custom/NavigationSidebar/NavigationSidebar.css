@@ -66,6 +66,10 @@
   transition: background-color 0.2s ease;
 }
 
+.nav-item.collapsed {
+  justify-content: center;
+}
+
 .nav-item:hover {
   background-color: var(--color-hover);
 }

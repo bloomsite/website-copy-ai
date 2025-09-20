@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./NavigationSidebar.css";
 import { type SidebarItem } from "../../../core/Types/typeSidebarItem";
@@ -15,6 +15,13 @@ const NavigationSidebar: React.FC<NavigationsSidebarProps> = ({
   sidebarTitle,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--navigation-sidebar-width",
+      isCollapsed ? "110px" : "280px"
+    );
+  }, [isCollapsed]);
 
   // Only display items with active === true
   const activeSidebarItems = sidebarItems.filter((item) => item.active);
@@ -36,7 +43,11 @@ const NavigationSidebar: React.FC<NavigationsSidebarProps> = ({
           <NavLink
             key={item.route}
             to={item.route}
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+            className={({ isActive }) =>
+              `nav-item ${isActive ? "active" : ""} ${
+                isCollapsed ? "collapsed" : ""
+              }`
+            }
           >
             <span className="icon">{getIcon(item.icon)}</span>
             {!isCollapsed && <span className="title">{item.title}</span>}

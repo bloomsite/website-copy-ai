@@ -3,12 +3,12 @@
   padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
-  margin-left: calc(280px + 2rem); 
+  margin-left: calc(var(--navigation-sidebar-width) + 2rem); 
   margin-top: 1rem; 
   background-color: var(--color-surface);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: calc(100% - 280px);
+  width: calc(100% - var(--navigation-sidebar-width));
 }
 
 .users-overview-title {
