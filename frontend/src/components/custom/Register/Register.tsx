@@ -10,7 +10,6 @@ interface RegisterProps {
       email: string;
       firstName: string;
       lastName: string;
-      companyName: string;
       password: string;
     },
     adminRegistration: boolean
@@ -26,7 +25,6 @@ export const Register: React.FC<
     email: "",
     firstName: "",
     lastName: "",
-    companyName: "",
     password: "",
     confirmPassword: "",
   });
@@ -118,15 +116,6 @@ export const Register: React.FC<
               required
             />
           </div>
-          <TextField
-            id="companyName"
-            type="text"
-            label="Bedrijfsnaam"
-            value={formData.companyName}
-            onChange={handleChange("companyName")}
-            placeholder="Vul je bedrijfsnaam in"
-            required
-          />
           <TextField
             id="password"
             type="password"

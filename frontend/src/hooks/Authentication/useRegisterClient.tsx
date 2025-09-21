@@ -6,7 +6,6 @@ interface RegisterData {
   email: string;
   firstName: string;
   lastName: string;
-  companyName: string;
   password: string;
 }
 
@@ -44,7 +43,6 @@ export const useRegisterClient = (): UseRegisterClient => {
         password: userData.password,
         first_name: userData.firstName,
         last_name: userData.lastName,
-        company_name: userData.companyName,
       });
 
       if (adminRegistration !== true) {
