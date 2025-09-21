@@ -9,7 +9,7 @@ const UsersOverview: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [includeAdmins, setIncludeAdmins] = useState(false);
+  const [includeAdmins, setIncludeAdmins] = useState(true);
   const [page, setPage] = useState(1);
 
   const navigate = useNavigate();

@@ -2,15 +2,18 @@ import React from "react";
 import type { FormSubmission } from "../../../hooks/Users/useUserDetail";
 import { newExportFormToPDF } from "../../../core/Utils/newPdfExport";
 import "./FormDetailModal.css";
+import { useDeleteForm } from "../../../hooks/Forms/useDeleteForm";
 
 interface FormDetailModalProps {
   form: FormSubmission;
   onClose: () => void;
+  userId?: string;
 }
 
 export const FormDetailModal: React.FC<FormDetailModalProps> = ({
   form,
   onClose,
+  userId,
 }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString("nl-NL", {
@@ -21,6 +24,8 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
       minute: "2-digit",
     });
   };
+
+  const { isDeleting, deleteForm } = useDeleteForm();
 
   // Close modal when clicking outside
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -67,9 +72,10 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
           <button
             className="form-detail-modal__button form-detail-modal__button--delete"
             onClick={() => {
-              // TODO: Implement delete functionality
-              console.log("Delete form:", form.submissionId);
+              deleteForm(form.formId, userId || "");
+              onClose();
             }}
+            disabled={isDeleting}
           >
             Verwijderen
           </button>

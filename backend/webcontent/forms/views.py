@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from azure.cosmos import CosmosClient, exceptions as CosmosExceptions 
 
+from users.models import Role 
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -127,6 +129,42 @@ class FormDetailView(APIView):
             "version": str(form.version),
         }
         return Response(item)
+
+class FormDeleteView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
+    def delete(self, request, *args, **kwargs):
+        User = get_user_model()
+
+        request_user = request.user
+
+        user_id = request.data.get("userId")
+        form_id = request.data.get("formId")
+        
+
+        if not request_user.is_authenticated:
+            return Response({"error":"user isn't authenticated"}, status=401)
+        
+        if request_user.role != Role.ADMIN:
+            return Response({"error":"You have to be an administrator to remove records"}, status=401)
+        
+        user = User.objects.get(uuid=user_id)
+        form = Form.objects.get(form_id=form_id)
+        
+        if user is None or form_id is None: 
+            return Response({"error":"userId and formId have to be provided"}, status=400)
+        try: 
+            submission = FormSubmission.objects.get(user=user, form=form)
+            submission.delete()
+            return Response({"success":"submissions was deleted"}, status=200)
+        except FormSubmission.DoesNotExist: 
+            return Response({"error":"form sumbission does not exist"}, status=404)
+        except FormSubmission.MultipleObjectsReturned:
+            return Response({"error":"multiple submissions found"}, status=400)
+        
+
     
 class FormSubmitView(APIView):
     permission_classes = [permissions.IsAuthenticated]

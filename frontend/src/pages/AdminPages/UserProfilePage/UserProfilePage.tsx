@@ -13,6 +13,7 @@ export const UserProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const { userDetail, loading, error } = useUserDetail(userId);
   const [selectedForm, setSelectedForm] = useState<FormSubmission | null>(null);
+
   if (loading) {
     return (
       <div className="user-detail-page">
@@ -68,6 +69,7 @@ export const UserProfilePage: React.FC = () => {
       {selectedForm && (
         <FormDetailModal
           form={selectedForm}
+          userId={userId}
           onClose={() => setSelectedForm(null)}
         />
       )}

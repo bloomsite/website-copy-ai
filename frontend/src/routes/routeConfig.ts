@@ -12,19 +12,21 @@ const LoginPage = React.lazy(() => import('../pages/LoginPage/LoginPage'))
 
 // Admin 
 const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
+const AdminUsers = React.lazy(() => import('../pages/AdminPages/AdminUsers/AdminUsers'))
+const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/InviteUsers'))
 
 // Dashboard
 const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
 const DashboardForms = React.lazy(() => import('../pages/DashboardPages/DashboardForms/DashboardForms'))
 const FormDetailPage = React.lazy(() => import('../pages/DashboardPages/FormDetailPage/FormDetailPage'))
-const AdminUsers = React.lazy(() => import('../pages/AdminPages/AdminUsers/AdminUsers'))
+
+
 // UserProfilePage is a named export; map it to default for React.lazy
 const UserProfilePage = React.lazy(() =>
     import('../pages/AdminPages/UserProfilePage/UserProfilePage').then((mod) => ({
         default: (mod as any).UserProfilePage || (mod as any).default,
     }))
 )
-const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/InviteUsers'))
 
 
 interface RouteConfig {
