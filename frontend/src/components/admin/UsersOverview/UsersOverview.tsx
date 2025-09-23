@@ -3,7 +3,7 @@ import { useUsers } from "../../../hooks/Users/useUsers";
 import "./UsersOverview.css";
 import { useNavigate } from "react-router-dom";
 
-const PAGE_SIZE = 7;
+const PAGE_SIZE = 50;
 
 const UsersOverview: React.FC = () => {
   const [firstName, setFirstName] = useState("");
