@@ -11,12 +11,14 @@ from users.models import Role
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from rest_framework.decorators import api_view, permission_classes
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from typing import Any, Dict, List
 
 from .models import Form, FormSubmission
+from .services.blob_storage import upload_file_to_storage, upload_multiple_files
 
 def _container_form_definitions():
     client = CosmosClient(
@@ -70,11 +72,17 @@ class FormsOverviewView(APIView):
                        )
                  .order_by("order", "form_id"))
         
+        form_type = request.query_params.get("form_type")
+
+        if form_type:
+            forms = forms.filter(form_type=form_type)
+        
         items = [
             {
                 "formId": f.form_id,
                 "title": f.title,
                 "icon": f.icon, 
+                "type": f.form_type, 
                 "description": f.description,
                 "shortDescription": f.short_description,
                 "version": str(f.version),
@@ -170,9 +178,7 @@ class FormSubmitView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-
     def post(self, request, *args, **kwargs):
-            
         user = request.user 
         data: Dict = request.data 
 
@@ -192,6 +198,19 @@ class FormSubmitView(APIView):
         if not form_answers:
             return Response({"error": "request must include answers"}, status=400)
         
+        # Handle file uploads if present
+        if request.FILES:
+            uploaded_urls = {}
+            for field_name, file_obj in request.FILES.items():
+                try:
+                    file_url = upload_file_to_storage(str(user.id), file_obj)
+                    uploaded_urls[field_name] = file_url
+                except Exception as e:
+                    return Response({"error": f"File upload failed: {str(e)}"}, status=500)
+            
+            # Add file URLs to form answers
+            form_answers.update(uploaded_urls)
+        
         try:
             form = get_object_or_404(Form, form_id=form_id)
             submitted_form = FormSubmission.objects.create(
@@ -206,6 +225,19 @@ class FormSubmitView(APIView):
             return Response({"error":"invalid JSON format"}, status=400)
             
         return Response({"response": "succeeded"}, status=200)
+    
+class UploadFormImageView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user_uuid = request.user.uuid 
+        file = request.FILES['image']
+        
+        sas = upload_file_to_storage(user_id=user_uuid, file_obj=file)
+
+        return Response({"url":str(sas)}, status=200)
+
+
     
 class UserFormSubmissionsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -314,6 +346,25 @@ class FormProgressionView(APIView):
             return Response({"detail":f"updated {doc_id}"}, status=200)
         except Exception as e: 
             return Response({"error": f"{e}"}, status=500)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def upload_image(request):
+    """Simple image upload endpoint"""
+    if 'image' not in request.FILES:
+        return Response({'error': 'No image provided'}, status=400)
+    
+    try:
+        image_file = request.FILES['image']
+        url = upload_file_to_storage(str(request.user.id), image_file)
+        
+        return Response({
+            'success': True,
+            'url': url
+        }, status=201)
+        
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 
 
 

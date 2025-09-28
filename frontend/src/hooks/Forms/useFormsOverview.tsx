@@ -22,10 +22,13 @@ export const useFormsOverview = () => {
     forms: [],
   });
 
-  const retrieveForms = async () => {
+  const retrieveForms = async (type?: string) => {
     setState((prev) => ({ ...prev, isLoading: true, error: undefined }));
     try {
-      const response = await apiClient.get<Form[]>("api/forms/forms-overview");
+      const url = type
+        ? `api/forms/forms-overview?type=${type}`
+        : "api/forms/forms-overview";
+      const response = await apiClient.get<Form[]>(url);
       setState((prev) => ({
         ...prev,
         forms: response.data,

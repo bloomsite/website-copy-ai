@@ -8,6 +8,7 @@ import {
   LetterText,
   User,
   Plus,
+  Check,
 } from "lucide-react";
 
 export const getIcon = (iconName: string, size: number = 20) => {
@@ -30,6 +31,8 @@ export const getIcon = (iconName: string, size: number = 20) => {
       return <User size={size} />;
     case "plus":
       return <Plus size={size} />;
+    case "check":
+      return <Check size={size} />;
     default:
       return <Settings size={size} />;
   }

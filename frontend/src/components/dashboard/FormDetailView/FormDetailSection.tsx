@@ -2,6 +2,7 @@ import React from "react";
 import TextField from "../../core/TextField/TextField";
 import Select from "../../core/Select/Select";
 import Multiselect from "../../core/Multiselect/Multiselect";
+import Input from "../../core/Input/Input";
 import Button from "../../core/Button/Button";
 import type { FormField } from "../../../core/Types/typeFormObject";
 import "./FormDetailSection.css";
@@ -125,6 +126,39 @@ const FormDetailSection: React.FC<FormDetailSectionProps> = ({
                     required={field.required}
                     className="form-field-input"
                     placeholder={field.placeholder || "Selecteer een optie..."}
+                    size="large"
+                  />
+                ) : field.type === "image" ? (
+                  <Input
+                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                    label={field.label}
+                    type="file"
+                    accept="image/*"
+                    onChange={(value) =>
+                      onFieldChange(instanceIdx, fieldIdx, value)
+                    }
+                    onFileSelect={(file) => {
+                      // TODO: Upload to Azure Blob Storage
+                      console.log("File selected:", file);
+                    }}
+                    helperText={field.description}
+                    required={field.required}
+                    className="form-field-input"
+                    size="large"
+                  />
+                ) : field.type === "email" ? (
+                  <Input
+                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                    label={field.label}
+                    type="email"
+                    value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
+                    onChange={(value) =>
+                      onFieldChange(instanceIdx, fieldIdx, value)
+                    }
+                    helperText={field.description}
+                    required={field.required}
+                    className="form-field-input"
+                    placeholder={field.placeholder}
                     size="large"
                   />
                 ) : (
