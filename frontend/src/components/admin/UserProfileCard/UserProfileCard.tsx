@@ -5,7 +5,6 @@ import Card from "../../core/Card/Card";
 import Select from "../../core/Select/Select";
 import TextField from "../../core/TextField/TextField";
 import "./UserProfileCard.css";
-import { useFormsOverview } from "../../../hooks/Forms/useFormsOverview";
 
 interface UserProfileCardProps {
   user: UserDetail;
@@ -25,8 +24,6 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({ user }) => {
     { value: "form_3", label: "Feedbackformulier" },
     { value: "form_4", label: "Evaluatieformulier" },
   ];
-
-  const { retrieveForms } = useFormsOverview();
 
   const handleSaveSubmission = () => {
     // Add your save logic here
