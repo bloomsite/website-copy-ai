@@ -6,9 +6,9 @@
 }
 
 .input-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
@@ -63,14 +63,15 @@
   background-color: var(--color-primary, #3b82f6);
   color: var(--color-text, white);
   cursor: pointer;
-  transition: background-color 0.25s;
+  /* transition: background-color 0.25s; */
   min-width: 120px;
   min-height: 40px;
   flex: 1;
 }
 
+
 .file-input-button:hover:not(:disabled) {
-  background-color: var(--color-primary-hover, #2563eb);
+  background-color: var(--color-primary-hover);
 }
 
 .file-input-button:disabled {
@@ -153,8 +154,9 @@
 }
 
 .input-helper-text {
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 1rem;
+  color: var(--color-sublte-text);
+  font-style: italic; 
 }
 
 /* Size variations */

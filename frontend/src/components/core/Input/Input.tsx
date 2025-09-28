@@ -97,6 +97,8 @@ const Input: React.FC<InputProps> = ({
         </label>
       )}
 
+      {helperText && <div className="input-helper-text">{helperText}</div>}
+
       {type === "file" ? (
         <div className="file-input-wrapper">
           <input
@@ -114,7 +116,7 @@ const Input: React.FC<InputProps> = ({
             disabled={disabled || uploading}
             className={`file-input-button ${
               selectedFileName ? "file-selected" : ""
-            }`}
+            } `}
           >
             <span className="file-button-text">
               {uploading ? "Uploaden..." : "Kies een foto"}
@@ -159,7 +161,6 @@ const Input: React.FC<InputProps> = ({
         </div>
       )}
 
-      {helperText && <div className="input-helper-text">{helperText}</div>}
       {error && <div className="upload-error-message">{error}</div>}
     </div>
   );

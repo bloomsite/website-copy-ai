@@ -11,23 +11,13 @@ from users.models import Role
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from rest_framework.decorators import api_view, permission_classes
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from typing import Any, Dict, List
 
 from .models import Form, FormSubmission
-from .services.blob_storage import upload_file_to_storage, upload_multiple_files
-
-def _container_form_definitions():
-    client = CosmosClient(
-        settings.COSMOS["ENDPOINT"], 
-        credential=settings.COSMOS["KEY"]
-        )
-    
-    db = client.get_database_client(settings.COSMOS["DATABASE_FORM_DATA"])
-    return db.get_container_client(settings.COSMOS["CONTAINER_FORM_DEFINITIONS"])
+from .services.blob_storage import upload_file_to_storage
 
 
 def make_progression_id(user_id: str, form_id: str, form_version: str):
@@ -39,21 +29,6 @@ def make_progression_id(user_id: str, form_id: str, form_version: str):
     pk_user_id = f"user:{user_id}"
     doc_id = f"form:{form_id}version{form_version}"
     return pk_user_id, doc_id
-
-
-class PublicFormsView(APIView):
-    def get(self, request):
-        c = _container_form_definitions()
-        items = list(c.query_items(
-            """
-            SELECT c.formId, c.title, c.version
-            FROM c
-            WHERE c.type = 'FormDefinition' AND c.isActive = true
-            ORDER BY c.title
-            """,
-            enable_cross_partition_query=True
-        ))
-        return Response(items)
     
 class FormsOverviewView(APIView):
     permission_classes = []
@@ -138,7 +113,7 @@ class FormDetailView(APIView):
         }
         return Response(item)
 
-class FormDeleteView(APIView):
+class DeleteUserFormView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
@@ -198,18 +173,6 @@ class FormSubmitView(APIView):
         if not form_answers:
             return Response({"error": "request must include answers"}, status=400)
         
-        # Handle file uploads if present
-        if request.FILES:
-            uploaded_urls = {}
-            for field_name, file_obj in request.FILES.items():
-                try:
-                    file_url = upload_file_to_storage(str(user.id), file_obj)
-                    uploaded_urls[field_name] = file_url
-                except Exception as e:
-                    return Response({"error": f"File upload failed: {str(e)}"}, status=500)
-            
-            # Add file URLs to form answers
-            form_answers.update(uploaded_urls)
         
         try:
             form = get_object_or_404(Form, form_id=form_id)
@@ -233,9 +196,12 @@ class UploadFormImageView(APIView):
         user_uuid = request.user.uuid 
         file = request.FILES['image']
         
-        sas = upload_file_to_storage(user_id=user_uuid, file_obj=file)
+        try:
+            sas = upload_file_to_storage(user_id=user_uuid, file_obj=file)
+        except Exception as e:
+            return Response({"error":f"an exception occured: {e}"}, status=500)
 
-        return Response({"url":str(sas)}, status=200)
+        return Response({"url":str(sas)}, status=201)
 
 
     
@@ -347,24 +313,6 @@ class FormProgressionView(APIView):
         except Exception as e: 
             return Response({"error": f"{e}"}, status=500)
 
-@api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
-def upload_image(request):
-    """Simple image upload endpoint"""
-    if 'image' not in request.FILES:
-        return Response({'error': 'No image provided'}, status=400)
-    
-    try:
-        image_file = request.FILES['image']
-        url = upload_file_to_storage(str(request.user.id), image_file)
-        
-        return Response({
-            'success': True,
-            'url': url
-        }, status=201)
-        
-    except Exception as e:
-        return Response({'error': str(e)}, status=500)
 
 
 

@@ -146,21 +146,6 @@ const FormDetailSection: React.FC<FormDetailSectionProps> = ({
                     className="form-field-input"
                     size="large"
                   />
-                ) : field.type === "email" ? (
-                  <Input
-                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
-                    label={field.label}
-                    type="email"
-                    value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
-                    onChange={(value) =>
-                      onFieldChange(instanceIdx, fieldIdx, value)
-                    }
-                    helperText={field.description}
-                    required={field.required}
-                    className="form-field-input"
-                    placeholder={field.placeholder}
-                    size="large"
-                  />
                 ) : (
                   <TextField
                     helperText={field.description}
