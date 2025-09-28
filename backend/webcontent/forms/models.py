@@ -3,6 +3,10 @@ from django.db import models
 from django.contrib.auth import get_user_model 
 from django.utils.text import slugify
 
+class FormType(models.TextChoices):
+    USER_GENERATED = 'user_generated', "User Generated"
+    AI_GENERATED = "ai_generated", "AI Generated"
+
 User = get_user_model()
 
 def generate_form_id(title) -> str:
@@ -15,6 +19,11 @@ def generate_form_id(title) -> str:
 
 
 class Form(models.Model):
+    form_type = models.CharField(
+        choices=FormType.choices, 
+        default=FormType.USER_GENERATED, 
+    )
+
     form_id = models.CharField(max_length=100, unique=True, editable=False)
     title = models.CharField(max_length=255)
     version = models.PositiveIntegerField(default=1)
@@ -79,6 +88,7 @@ class FormField(models.Model):
         ('multiselect', 'Multi-select'),
         ('select', 'Select'),
         ('select_few', 'Select Few'),
+        ('image', 'Image'),
     )
 
     label = models.CharField(max_length=255)

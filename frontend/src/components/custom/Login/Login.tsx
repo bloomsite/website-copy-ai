@@ -31,7 +31,7 @@ export const Login: React.FC<LoginProps> = ({
         size="large"
         elevation="medium"
         centered
-        title="Welkom Terug!"
+        title="Welkom!"
         subtitle="Login om door te gaan"
       >
         <form onSubmit={handleSubmit} className="login-form">

@@ -1,0 +1,174 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.required-asterisk {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.input-field {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background-color: white;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-field:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.file-input-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-primary, #3b82f6);
+  color: var(--color-text, white);
+  cursor: pointer;
+  transition: background-color 0.25s;
+  min-width: 120px;
+  min-height: 40px;
+  flex: 1;
+}
+
+.file-input-button:hover:not(:disabled) {
+  background-color: var(--color-primary-hover, #2563eb);
+}
+
+.file-input-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.file-input-button.file-selected {
+  background-color: #10b981;
+  opacity: 0.8;
+}
+
+.file-input-button.file-selected:hover:not(:disabled) {
+  background-color: #059669;
+  opacity: 0.9;
+}
+
+.file-button-text {
+  margin: 0;
+  line-height: 1;
+}
+
+.file-status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #10b981;
+  color: white;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.selected-file-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.file-icon {
+  font-size: 14px;
+}
+
+.file-name {
+  font-weight: 500;
+}
+
+.clear-file-button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.clear-file-button:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.clear-file-button:active {
+  background-color: #d1d5db;
+}
+
+.input-helper-text {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Size variations */
+.input-small .input-field {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.input-medium .input-field {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.input-large .input-field {
+  padding: 12px 16px;
+  font-size: 16px;
+}
