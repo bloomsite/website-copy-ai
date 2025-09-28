@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getIcon } from "../../../core/Utils/getIcon";
 import apiClient from "../../../services/apiClient";
 import "./Input.css";
@@ -37,6 +37,8 @@ const Input: React.FC<InputProps> = ({
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,6 +48,23 @@ const Input: React.FC<InputProps> = ({
     setSelectedFileName(file.name);
     setError(null);
     onFileSelect?.(file);
+
+    // create local preview immediately so user sees the image before upload completes
+    try {
+      // revoke previous object URL if any
+      if (objectUrlRef.current) {
+        try {
+          URL.revokeObjectURL(objectUrlRef.current);
+        } catch {}
+        objectUrlRef.current = null;
+      }
+      const localUrl = URL.createObjectURL(file);
+      objectUrlRef.current = localUrl;
+      setPreviewUrl(localUrl);
+    } catch (err) {
+      // If URL.createObjectURL isn't available, ignore and continue
+      console.debug("Could not create local preview URL", err);
+    }
 
     // Upload to backend which returns a SAS URL
     try {
@@ -67,10 +86,20 @@ const Input: React.FC<InputProps> = ({
 
       // store SAS URL as the field value (so backend FormSubmitView will save it)
       onChange(sasUrl);
+      // replace local preview with the uploaded SAS URL so preview persists after upload
+      setPreviewUrl(sasUrl);
     } catch (err: any) {
       setError(err?.response?.data?.error || err.message || "Upload failed");
       // clear value on failure
       onChange("");
+      // clear preview if upload failed
+      if (objectUrlRef.current) {
+        try {
+          URL.revokeObjectURL(objectUrlRef.current);
+        } catch {}
+        objectUrlRef.current = null;
+      }
+      setPreviewUrl(null);
     } finally {
       setUploading(false);
     }
@@ -84,9 +113,36 @@ const Input: React.FC<InputProps> = ({
     setSelectedFileName("");
     setError(null);
     onChange("");
+    // revoke any locally created object URL
+    if (objectUrlRef.current) {
+      try {
+        URL.revokeObjectURL(objectUrlRef.current);
+      } catch {}
+      objectUrlRef.current = null;
+    }
+    setPreviewUrl(null);
     const fileInput = document.getElementById(id) as HTMLInputElement | null;
     if (fileInput) fileInput.value = "";
   };
+
+  // If parent supplies a value (e.g. existing SAS URL), show it as preview
+  useEffect(() => {
+    if (value) {
+      setPreviewUrl(value);
+    }
+  }, [value]);
+
+  // cleanup any object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        try {
+          URL.revokeObjectURL(objectUrlRef.current);
+        } catch {}
+        objectUrlRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className={`input-container ${className} input-${size}`}>
@@ -162,6 +218,13 @@ const Input: React.FC<InputProps> = ({
       )}
 
       {error && <div className="upload-error-message">{error}</div>}
+
+      {/* image preview */}
+      {type === "file" && previewUrl && (
+        <div className="image-preview-wrapper">
+          <img src={previewUrl} alt="Selected" className="image-preview" />
+        </div>
+      )}
     </div>
   );
 };

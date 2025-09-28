@@ -174,3 +174,40 @@
   padding: 12px 16px;
   font-size: 16px;
 }
+
+/* Image preview */
+.image-preview-wrapper {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.image-preview {
+  width: auto;
+  height: auto;
+  max-width: 480px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.file-status-indicator.uploading {
+  background-color: #f59e0b; /* amber */
+  animation: pulse 1.6s infinite;
+}
+
+.file-status-indicator.error {
+  background-color: #ef4444; /* red */
+}
+
+.upload-error-message {
+  color: #ef4444;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
