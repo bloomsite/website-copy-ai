@@ -8,6 +8,7 @@ interface Form {
   shortDescription: string;
   version: string;
   icon: string;
+  formType: string;
 }
 
 interface FormOverviewState {
@@ -26,7 +27,7 @@ export const useFormsOverview = () => {
     setState((prev) => ({ ...prev, isLoading: true, error: undefined }));
     try {
       const url = type
-        ? `api/forms/forms-overview?type=${type}`
+        ? `api/forms/forms-overview?form_type=${type}`
         : "api/forms/forms-overview";
       const response = await apiClient.get<Form[]>(url);
       setState((prev) => ({

@@ -1,54 +1,43 @@
-import { useEffect, useCallback, useRef, useState } from "react";
+import type { AxiosError } from "axios";
+import { useCallback, useEffect, useRef, useState } from "react";
 import apiClient from "../../services/apiClient";
-import { AxiosError } from "axios";
 
-export interface Answers {
-  [sectionIndex: number]: {
-    [instanceIndex: number]: {
-      [fieldIndex: number]: string;
-    };
-  };
-}
-
-export interface FieldValue {
-  [sectionIndex: number]: {
-    [instanceIndex: number]: {
-      [fieldIndex: number]: string;
-    };
-  };
+interface Answers {
+  [key: string]: string;
 }
 
 interface ProgressProps {
   userId: string | null;
   formId: string;
-  formVersion: string;
   token: string | null;
   debounceMs?: number;
-  type?: string;
+  skipFetch?: boolean;
+  formVersion?: string;
 }
 
-export function useFormProgress({
+export function useFormConfirmProgress({
   userId,
   formId,
-  formVersion,
   token,
   debounceMs,
+  skipFetch = false,
+  formVersion = "1",
 }: ProgressProps) {
-  const [answers, setAnswers] = useState<Answers>({});
+  const [answers, setAnswer] = useState<Answers>();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
   const [error, setError] = useState<AxiosError | null>(null);
-  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   const dirtyRef = useRef(false);
   const timerRef = useRef<number | null>(null);
-
-  const endpoint = `api/forms/progress/`;
+  const endpoint = "api/forms/progress/";
 
   const fetchProgress = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
+
       const response = await apiClient.get(endpoint, {
         params: {
           userId,
@@ -59,43 +48,43 @@ export function useFormProgress({
 
       if (response.status === 200 && response.data.answers) {
         const data = response.data.answers;
-        setAnswers(data);
+        setAnswer(data);
       } else if (response.status === 404) {
         console.log("No progress found");
-        setAnswers({});
+        setAnswer({});
       }
     } catch (error) {
       setError(error as AxiosError);
     } finally {
       setLoading(false);
     }
-  }, [endpoint, token, formVersion]);
+  }, [endpoint, userId, formId]);
 
   const saveProgressNow = useCallback(
     async (payload?: Answers) => {
       try {
         setSaving(true);
         setError(null);
-        const response = await apiClient.put(endpoint, {
+        await apiClient.put(endpoint, {
           userId,
           formId,
           formVersion,
           answers: payload ?? answers,
         });
 
-        const data = response.data;
         dirtyRef.current = false;
-        setLastSavedAt(data?.updatedAt ?? new Date().toISOString());
       } catch (error) {
         setError(error as AxiosError);
       } finally {
         setSaving(false);
       }
     },
-    [endpoint, token, userId, formId, formVersion, answers]
+    [endpoint, token, userId, formId, answers]
   );
+
+  // saving useEffect
   useEffect(() => {
-    if (loading) return;
+    if (loading || !debounceMs) return; // Skip auto-save if debounceMs is 0
     dirtyRef.current = true;
     if (timerRef.current) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
@@ -107,10 +96,12 @@ export function useFormProgress({
   }, [answers, debounceMs, loading, saveProgressNow]);
 
   useEffect(() => {
-    fetchProgress();
-  }, [fetchProgress, formVersion]);
+    if (!skipFetch) {
+      fetchProgress();
+    }
+  }, [fetchProgress, formId, skipFetch]);
 
-  // Safety nets
+  //   Safety nets
   useEffect(() => {
     const onBeforeUnload = () => {
       if (dirtyRef.current) {
@@ -131,35 +122,33 @@ export function useFormProgress({
     };
   }, [saveProgressNow]);
 
-  const setOneAnswer = useCallback(
-    (
-      sectionIdx: number,
-      instanceIdx: number,
-      fieldIdx: number,
-      value: string
-    ) => {
-      setAnswers((prev) => ({
-        ...prev,
-        [sectionIdx]: {
-          ...(prev[sectionIdx] || {}),
-          [instanceIdx]: {
-            ...(prev[sectionIdx]?.[instanceIdx] || {}),
-            [fieldIdx]: value,
-          },
+  const updateAnswers = useCallback((newAnswers: Partial<Answers>) => {
+    setAnswer((prev) => {
+      const current = prev || {};
+      const filtered = Object.entries(newAnswers).reduce(
+        (acc, [key, value]) => {
+          if (value !== undefined) {
+            acc[key] = value;
+          }
+          return acc;
         },
-      }));
-    },
-    []
-  );
+        {} as Answers
+      );
+      return { ...current, ...filtered };
+    });
+  }, []);
+
+  const setAnswers = useCallback((newAnswers: Answers) => {
+    setAnswer(newAnswers);
+  }, []);
 
   return {
     answers,
-    setAnswers,
-    setOneAnswer,
     loading,
     saving,
     error,
-    lastSavedAt,
+    updateAnswers,
+    setAnswers,
     saveProgressNow,
   };
 }

@@ -17,8 +17,16 @@ const FormOverview: React.FC = () => {
     });
   }, []);
 
-  const handleFillForm = (formId: string, formVersion: string) => {
-    navigate(`/forms/${formId}/v/${formVersion}`);
+  const handleFillForm = (
+    formId: string,
+    formVersion: string,
+    formType: string
+  ) => {
+    if (formType === "user_generated") {
+      navigate(`/forms/${formId}/v/${formVersion}`);
+    } else if (formType === "ai_generated") {
+      navigate(`/confirm/${formId}/v/${formVersion}`);
+    }
   };
 
   if (error) {
@@ -59,7 +67,9 @@ const FormOverview: React.FC = () => {
                 <div className="form-footer">
                   <Button
                     text="Invullen"
-                    onClick={() => handleFillForm(form.formId, form.version)}
+                    onClick={() =>
+                      handleFillForm(form.formId, form.version, form.formType)
+                    }
                     className="fill-form-button"
                     disabled={isFormSubmitted(form.formId) ? true : false}
                   />

@@ -1,7 +1,10 @@
 import React from 'react'
 
 // Lazy-loaded page components to avoid loading them all on first render
-const Home = React.lazy(() => import('../pages/Home/Home'))
+// ******* HOME PAGE *********
+// const Home = React.lazy(() => import('../pages/Home/Home'))
+// ******* HOME PAGE *********
+
 const Start = React.lazy(() => import('../pages/Start/Start'))
 const ContentWriter = React.lazy(() => import('../pages/ContentWriter/ContentWriter'))
 
@@ -19,6 +22,7 @@ const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/Invi
 const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
 const DashboardForms = React.lazy(() => import('../pages/DashboardPages/DashboardForms/DashboardForms'))
 const FormDetailPage = React.lazy(() => import('../pages/DashboardPages/FormDetailPage/FormDetailPage'))
+const FormConfirmPage = React.lazy(() => import('../pages/DashboardPages/FormConfirmPage/FormConfirmPage'))
 
 
 // UserProfilePage is a named export; map it to default for React.lazy
@@ -39,7 +43,7 @@ interface RouteConfig {
 
 export const routes: RouteConfig[]  = [
     // Public Routes
-    {path: '/', element: Home, isProtected: false},
+    {path: '/', element: DashboardForms, isProtected: false},
     {path: '/start', element: Start, isProtected: false},
     {path: '/content/:pageType', element: ContentWriter, isProtected: false},
     {path: '/register', element: RegisterPage, isProtected: false},
@@ -50,6 +54,7 @@ export const routes: RouteConfig[]  = [
     {path: '/dashboard/overview', element: Dashboard, isProtected: true},
     {path: '/dashboard/forms', element: DashboardForms, isProtected: true},
     {path: '/forms/:formId/v/:version', element: FormDetailPage, isProtected: true},
+    {path: '/confirm/:formId/v/:version', element: FormConfirmPage, isProtected: true},
 
 
     // Private Routes

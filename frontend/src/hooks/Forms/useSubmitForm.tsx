@@ -16,6 +16,7 @@ export interface FormSubmission {
   answers: {
     [key: string]: string;
   };
+  userId?: string;
 }
 
 export function useSubmitForm() {
@@ -27,7 +28,8 @@ export function useSubmitForm() {
   const submitForm = async (
     formId: string,
     formName: string,
-    nestedAnswers: NestedAnswers
+    nestedAnswers: NestedAnswers,
+    userId?: string
   ) => {
     setIsSubmitting(true);
     setError(null);
@@ -37,6 +39,7 @@ export function useSubmitForm() {
       formId,
       formName,
       answers: nestedAnswers,
+      userId,
     };
 
     try {
