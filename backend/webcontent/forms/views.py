@@ -57,7 +57,7 @@ class FormsOverviewView(APIView):
                 "formId": f.form_id,
                 "title": f.title,
                 "icon": f.icon, 
-                "type": f.form_type, 
+                "formType": f.form_type, 
                 "description": f.description,
                 "shortDescription": f.short_description,
                 "version": str(f.version),
@@ -154,12 +154,16 @@ class FormSubmitView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, request, *args, **kwargs):
-        user = request.user 
+        User = get_user_model()
+
         data: Dict = request.data 
 
         form_answers: Dict = data.get("answers")
         form_id = data.get("formId")
         form_name = data.get("formName")
+        submitted_user_id = data.get("userId")
+
+        user = request.user 
 
         if not user.is_authenticated:
             return Response({"error": "user isn't authenticated"}, status=401)
@@ -173,11 +177,16 @@ class FormSubmitView(APIView):
         if not form_answers:
             return Response({"error": "request must include answers"}, status=400)
         
+        if submitted_user_id is not None:
+            try:
+                user = get_object_or_404(User, uuid=submitted_user_id)
+            except Exception as e:
+                return Response({"error": f"and unexpected error occured {e}"}, status=500)
         
         try:
             form = get_object_or_404(Form, form_id=form_id)
             submitted_form = FormSubmission.objects.create(
-                user = request.user, 
+                user = user, 
                 form = form, 
                 form_name = form_name,
                 form_data = form_answers, 
