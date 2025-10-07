@@ -5,12 +5,20 @@ interface submission {
   formId: string;
   formName: string;
   formVersion: string;
+  isConfirmed: boolean;
 }
 
 export const useUserFormSubmissions = () => {
   const isFormSubmitted = (formId: string) => {
     return submissions.some((sub) => sub.formId === formId);
   };
+
+  const isFormConfirmed = (formId: string) => {
+    return submissions.some(
+      (sub) => sub.formId === formId && sub.isConfirmed === true
+    );
+  };
+
   const [submissions, setSubmissions] = useState<submission[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,5 +69,6 @@ export const useUserFormSubmissions = () => {
     error,
     refetchSubmissions,
     isFormSubmitted,
+    isFormConfirmed,
   };
 };

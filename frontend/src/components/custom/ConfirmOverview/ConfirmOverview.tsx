@@ -1,24 +1,24 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormsOverview } from "../../../hooks/Forms/useFormsOverview";
+import { useFormsOverview } from "../../../hooks/Forms/useConfirmOverview";
 import { useUserFormSubmissions } from "../../../hooks/Forms/useUserFormSubmissions";
 import Card from "../../core/Card/Card";
 import Button from "../../core/Button/Button";
-import "./FormOverview.css";
+import "./ConfirmOverview.css";
 
-const FormOverview: React.FC = () => {
+const ConfirmOverview: React.FC = () => {
   const navigate = useNavigate();
   const { retrieveForms, forms, isLoading, error } = useFormsOverview();
-  const { isFormSubmitted } = useUserFormSubmissions();
+  const { isFormConfirmed } = useUserFormSubmissions();
 
   useEffect(() => {
-    retrieveForms("user_generated").catch((err) => {
+    retrieveForms().catch((err) => {
       console.error("Error fetching forms:", err);
     });
   }, []);
 
   const handleFillForm = (formId: string, formVersion: string) => {
-    navigate(`/forms/${formId}/v/${formVersion}`);
+    navigate(`/confirm/${formId}/v/${formVersion}`);
   };
 
   if (error) {
@@ -32,7 +32,7 @@ const FormOverview: React.FC = () => {
 
   return (
     <div className="form-overview">
-      <h1 className="form-overview-title">Formulieren</h1>
+      <h1 className="form-overview-title">Bevestig gegenereerde content</h1>
 
       <div className="forms-grid">
         {isLoading
@@ -48,11 +48,10 @@ const FormOverview: React.FC = () => {
               ))
           : forms.map((form) => (
               <Card
-                // icon={getIcon(form.icon, 35)} even gedeactiveerd voor nu
                 key={form.formId}
                 className={`form-card ${
-                  isFormSubmitted(form.formId) ? "submitted" : ""
-                }`}
+                  isFormConfirmed(form.formId) ? "submitted" : ""
+                } ${isFormConfirmed(form.formId)}`}
                 title={form.title}
               >
                 <p className="form-description">{form.shortDescription}</p>
@@ -61,7 +60,7 @@ const FormOverview: React.FC = () => {
                     text="Invullen"
                     onClick={() => handleFillForm(form.formId, form.version)}
                     className="fill-form-button"
-                    disabled={isFormSubmitted(form.formId) ? true : false}
+                    disabled={isFormConfirmed(form.formId)}
                   />
                 </div>
               </Card>
@@ -71,4 +70,4 @@ const FormOverview: React.FC = () => {
   );
 };
 
-export default FormOverview;
+export default ConfirmOverview;

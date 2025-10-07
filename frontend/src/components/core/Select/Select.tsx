@@ -11,7 +11,7 @@ interface SelectProps {
   id: string;
   label: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, option?: SelectOption) => void;
   options: SelectOption[];
 
   // Optional props
@@ -47,7 +47,11 @@ const Select: React.FC<SelectProps> = ({
   const [isFocused, setIsFocused] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(e.target.value);
+    const selectedValue = e.target.value;
+    const selectedOption = options.find(
+      (option) => option.value === selectedValue
+    );
+    onChange(selectedValue, selectedOption);
   };
 
   const handleFocus = () => {

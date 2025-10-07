@@ -116,16 +116,22 @@ class FormField(models.Model):
     def __str__(self):
         return self.label
 
-    
+
 class FormSubmission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submissions")
+    is_confirmed = models.BooleanField(default=False)
     form = models.ForeignKey(Form, 
-                             on_delete=models.SET_NULL, null=True,
-                             related_name="submissions")
+                                on_delete=models.SET_NULL, null=True,
+                                related_name="submissions")
     form_name = models.CharField(max_length=255)
-
     submitted_at = models.DateTimeField(auto_now_add=True)
     form_data = models.JSONField()
+    submission_id = models.CharField(max_length=100, unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if not self.submission_id:
+            self.submission_id = str(uuid.uuid4())
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user}'s {self.form_name}"

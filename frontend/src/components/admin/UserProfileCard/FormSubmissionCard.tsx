@@ -5,6 +5,7 @@ import Select from "../../core/Select/Select";
 import TextField from "../../core/TextField/TextField";
 import { useFormsOverview } from "../../../hooks/Forms/useFormsOverview";
 import { useFormConfirmProgress } from "../../../hooks/Database/useFormConfirmProgress";
+import { useSubmitForm } from "../../../hooks/Forms/useSubmitConfirmForm";
 
 interface FormSubmissionCardProps {
   userId: string;
@@ -22,10 +23,12 @@ export const FormSubmissionCard: React.FC<FormSubmissionCardProps> = ({
 }) => {
   const [formData, setFormData] = useState<{
     formId: string;
+    formTitle: string;
     submissionData: string;
     formVersion: string;
   }>({
     formId: "",
+    formTitle: "",
     submissionData: "",
     formVersion: "1",
   });
@@ -33,7 +36,7 @@ export const FormSubmissionCard: React.FC<FormSubmissionCardProps> = ({
     { label: string; value: string; version: string }[]
   >([]);
   const [validationError, setValidationError] = useState<string | null>(null);
-
+  const { submitForm } = useSubmitForm();
   const { retrieveForms } = useFormsOverview();
   const token = window.localStorage.getItem("access_token") ?? "";
 
@@ -116,9 +119,20 @@ export const FormSubmissionCard: React.FC<FormSubmissionCardProps> = ({
 
       // Submit form for user
       await saveProgressNow(submissionAnswers);
+      await submitForm(
+        formData.formId,
+        formData.formTitle,
+        questionAnswers,
+        userId
+      );
 
       // Reset and close
-      setFormData({ formId: "", submissionData: "", formVersion: "1" });
+      setFormData({
+        formId: "",
+        formTitle: "",
+        submissionData: "",
+        formVersion: "1",
+      });
       onClose();
     } catch (error) {
       console.error("Error parsing submission data:", error);
@@ -126,7 +140,12 @@ export const FormSubmissionCard: React.FC<FormSubmissionCardProps> = ({
   };
 
   const handleCancel = () => {
-    setFormData({ formId: "", submissionData: "", formVersion: "1" });
+    setFormData({
+      formId: "",
+      formTitle: "",
+      submissionData: "",
+      formVersion: "1",
+    });
     onClose();
   };
 
@@ -142,8 +161,12 @@ export const FormSubmissionCard: React.FC<FormSubmissionCardProps> = ({
             id="form-id-select"
             label="Formulier"
             value={formData.formId}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, formId: value }))
+            onChange={(value, option) =>
+              setFormData((prev) => ({
+                ...prev,
+                formId: value,
+                formTitle: option?.label || "",
+              }))
             }
             options={generatedFormOptions}
             placeholder="Selecteer een formulier..."

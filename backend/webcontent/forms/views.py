@@ -43,7 +43,7 @@ class FormsOverviewView(APIView):
                        "description", 
                        "short_description", 
                        "icon", 
-                       "version"
+                       "version", 
                        )
                  .order_by("order", "form_id"))
         
@@ -61,11 +61,44 @@ class FormsOverviewView(APIView):
                 "description": f.description,
                 "shortDescription": f.short_description,
                 "version": str(f.version),
+                
             }
             for f in forms 
         ]
 
         return Response(items)
+
+class ConfirmsOverviewView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request, *args, **kwargs):
+        forms = (FormSubmission.objects
+            .select_related('form')
+            .only(
+                'form__form_id',
+                'form__title',
+                'form__description',
+                'form__short_description',
+                'form__version',
+            )
+            .order_by('-submitted_at')
+        )
+        items = [
+            {
+            "formId": f.form.form_id,
+            "title": f.form.title,
+            "icon": f.form.icon,
+            "formType": f.form.form_type,
+            "description": f.form.description,
+            "shortDescription": f.form.short_description,
+            "version": str(f.form.version),
+            }
+            for f in forms
+        ]
+
+        return Response(items)
+
 
 class FormDetailView(APIView):
     permission_classes = []
@@ -161,6 +194,8 @@ class FormSubmitView(APIView):
         form_answers: Dict = data.get("answers")
         form_id = data.get("formId")
         form_name = data.get("formName")
+
+        # this is only used forn answer forms 
         submitted_user_id = data.get("userId")
 
         user = request.user 
@@ -198,6 +233,41 @@ class FormSubmitView(APIView):
             
         return Response({"response": "succeeded"}, status=200)
     
+class FormConfirmView(APIView): 
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        data: Dict = request.data
+
+        form_answers: Dict = data.get("answers")
+        form_id = data.get("formId")
+        form_name = data.get("formName")
+
+        user = request.user 
+
+        form = get_object_or_404(Form, form_id=form_id)
+
+        if not user.is_authenticated:
+            return Response({"error": "user isn't authenticated"}, status=401)
+
+        
+        
+        if form_name is None:
+            return Response({"error":"Submitted form must include a name"})
+
+        if not form_answers:
+            return Response({"error": "request must include answers"}, status=400)
+        
+        try:
+            form_submission = get_object_or_404(FormSubmission, form=form, user=user)
+            form_submission.is_confirmed = True
+            form_submission.save()
+            return Response({"detail":"form is confirmed"}, status=200)
+        except Exception as e: 
+            return Response({"error":f"an unexpected error occured: {e}"}, status=500)
+
+    
 class UploadFormImageView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -231,7 +301,8 @@ class UserFormSubmissionsView(APIView):
             "formName": submission.form_name,
             "formVersion": str(submission.form.version),
             "submittedAt": submission.submitted_at.isoformat(),
-            "formData": submission.form_data
+            "formData": submission.form_data,
+            "isConfirmed": submission.is_confirmed, 
         } for submission in submissions]
 
         return Response(submissions_data, status=status.HTTP_200_OK)
