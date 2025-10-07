@@ -126,7 +126,7 @@ class FormSubmission(models.Model):
     form_name = models.CharField(max_length=255)
     submitted_at = models.DateTimeField(auto_now_add=True)
     form_data = models.JSONField()
-    submission_id = models.CharField(max_length=100, unique=True, editable=False)
+    submission_id = models.CharField(max_length=100, unique=False, editable=False)
 
     def save(self, *args, **kwargs):
         if not self.submission_id:
