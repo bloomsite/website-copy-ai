@@ -30,6 +30,10 @@ const ConfirmOverview: React.FC = () => {
     );
   }
 
+  if (!isLoading && forms.length === 0) {
+    return null;
+  }
+
   return (
     <div className="form-overview">
       <h1 className="form-overview-title">Bevestig gegenereerde content</h1>
