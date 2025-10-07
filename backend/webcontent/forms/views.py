@@ -75,6 +75,7 @@ class ConfirmsOverviewView(APIView):
     def get(self, request, *args, **kwargs):
         forms = (FormSubmission.objects
             .select_related('form')
+            .filter(form_type="ai_generated")
             .only(
                 'form__form_id',
                 'form__title',

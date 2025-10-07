@@ -126,11 +126,8 @@ class FormSubmission(models.Model):
     form_name = models.CharField(max_length=255)
     submitted_at = models.DateTimeField(auto_now_add=True)
     form_data = models.JSONField()
+    form_type = models.CharField(choices=FormType.choices, default=FormType.USER_GENERATED)
 
-    def save(self, *args, **kwargs):
-        if not self.submission_id:
-            self.submission_id = str(uuid.uuid4())
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user}'s {self.form_name}"
