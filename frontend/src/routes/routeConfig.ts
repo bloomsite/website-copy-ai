@@ -17,6 +17,7 @@ const LoginPage = React.lazy(() => import('../pages/LoginPage/LoginPage'))
 const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
 const AdminUsers = React.lazy(() => import('../pages/AdminPages/AdminUsers/AdminUsers'))
 const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/InviteUsers'))
+const SubmissionOverview = React.lazy(() => import('../pages/AdminPages/AdminSubmissions/AdminSubmissions'))
 
 // Dashboard
 const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
@@ -57,9 +58,10 @@ export const routes: RouteConfig[]  = [
     {path: '/confirm/:formId/v/:version', element: FormConfirmPage, isProtected: true},
 
 
-    // Private Routes
+    // Admin Routes
     {path: '/admin', element: Admin ,isProtected:true},
     {path: '/admin/users', element: AdminUsers ,isProtected:true},
     {path: '/admin/users/:userId', element: UserProfilePage ,isProtected:true},
     {path: '/admin/invite', element: InviteUser ,isProtected:true},
+    {path: '/admin/submissions', element: SubmissionOverview, isProtected: true},
 ] 

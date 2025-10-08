@@ -145,7 +145,7 @@ class FormDetailView(APIView):
             "shortDescription": form.short_description,
             "version": str(form.version),
         }
-        return Response(item)
+        return Response(item, status=200)
 
 class DeleteUserFormView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -283,7 +283,44 @@ class UploadFormImageView(APIView):
 
         return Response({"url":str(sas)}, status=201)
 
+class FormSubmissionsView(APIView):
+    permission_classes = []
+    authentication_classes = [JWTAuthentication]
 
+    def get(self, request, *args, **kwargs):
+        user = request.user 
+
+        if user.role != Role.ADMIN: 
+            return Response({"error":"you don't have the permission to use this view"}, status=401)
+        
+        forms = (FormSubmission.objects
+                 .all()
+                 .only(
+                     "form__form_id", 
+                     "form__title", 
+                     "user__email", 
+                     "user__first_name", 
+                     "user__last_name", 
+                     "form_data",
+                     "form_type",
+                     "id",
+                 )
+                 )
+        
+        items = [
+            {
+                "formId": f.form.form_id,
+                "formName": f.form.title, 
+                "email": f.user.email, 
+                "firstName": f.user.first_name, 
+                "lastName": f.user.last_name, 
+                "userId": f.user.uuid,
+                "answers": f.form_data, 
+                "id": f.pk, 
+            }
+        for f in forms ]
+
+        return Response(items, status=200)
     
 class UserFormSubmissionsView(APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -29,7 +29,7 @@ export const useUserFormSubmissions = () => {
       setError(null);
 
       try {
-        const response = await apiClient.get("/api/forms/submissions/");
+        const response = await apiClient.get("/api/forms/submission/");
         setSubmissions(response.data);
       } catch (err: any) {
         setError(

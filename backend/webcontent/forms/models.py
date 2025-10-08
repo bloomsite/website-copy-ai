@@ -57,6 +57,7 @@ class Form(models.Model):
 
 
 class FormSection(models.Model):
+    id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_repeatable = models.BooleanField(default=False)

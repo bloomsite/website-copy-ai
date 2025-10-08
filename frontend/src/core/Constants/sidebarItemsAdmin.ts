@@ -23,7 +23,7 @@ export const sidebarItems: SidebarItem[] = [
     title: 'Inzendingen',
     icon: 'mail',
     route: '/admin/submissions',
-    active: false,
+    active: true,
   },
   {
     title: 'Uitnodigen',
