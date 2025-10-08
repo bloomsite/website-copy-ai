@@ -17,6 +17,7 @@ interface InputProps {
   className?: string;
   accept?: string; // For file inputs
   size?: "small" | "medium" | "large";
+  error?: string; // Error message to display
 }
 
 const Input: React.FC<InputProps> = ({
@@ -33,10 +34,11 @@ const Input: React.FC<InputProps> = ({
   className = "",
   accept,
   size = "medium",
+  error,
 }) => {
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const objectUrlRef = useRef<string | null>(null);
 
@@ -46,7 +48,7 @@ const Input: React.FC<InputProps> = ({
 
     // show filename immediately
     setSelectedFileName(file.name);
-    setError(null);
+    setUploadError(null);
     onFileSelect?.(file);
 
     // create local preview immediately so user sees the image before upload completes
@@ -89,7 +91,9 @@ const Input: React.FC<InputProps> = ({
       // replace local preview with the uploaded SAS URL so preview persists after upload
       setPreviewUrl(sasUrl);
     } catch (err: any) {
-      setError(err?.response?.data?.error || err.message || "Upload failed");
+      setUploadError(
+        err?.response?.data?.error || err.message || "Upload failed"
+      );
       // clear value on failure
       onChange("");
       // clear preview if upload failed
@@ -111,7 +115,7 @@ const Input: React.FC<InputProps> = ({
 
   const handleClearFile = () => {
     setSelectedFileName("");
-    setError(null);
+    setUploadError(null);
     onChange("");
     // revoke any locally created object URL
     if (objectUrlRef.current) {
@@ -145,7 +149,11 @@ const Input: React.FC<InputProps> = ({
   }, []);
 
   return (
-    <div className={`input-container ${className} input-${size}`}>
+    <div
+      className={`input-container ${className} input-${size} ${
+        error ? "error" : ""
+      }`}
+    >
       {label && (
         <label htmlFor={id} className="input-label">
           {label}
@@ -180,11 +188,11 @@ const Input: React.FC<InputProps> = ({
           </button>
 
           {/* status indicator */}
-          {selectedFileName && !uploading && !error && (
+          {selectedFileName && !uploading && !uploadError && (
             <div className="file-status-indicator">{getIcon("check", 20)}</div>
           )}
           {uploading && <div className="file-status-indicator uploading" />}
-          {error && <div className="file-status-indicator error">⚠</div>}
+          {uploadError && <div className="file-status-indicator error">⚠</div>}
         </div>
       ) : (
         <input
@@ -217,7 +225,9 @@ const Input: React.FC<InputProps> = ({
         </div>
       )}
 
-      {error && <div className="upload-error-message">{error}</div>}
+      {/* Display validation error or upload error */}
+      {error && <div className="input-error-message">{error}</div>}
+      {uploadError && <div className="upload-error-message">{uploadError}</div>}
 
       {/* image preview */}
       {type === "file" && previewUrl && (

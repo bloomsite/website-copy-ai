@@ -16,6 +16,7 @@ interface TextFieldProps {
   placeholder?: string;
   helperText?: string | null;
   validationState?: ValidationState;
+  error?: string; // Error message to display
   size?: Size;
   disabled?: boolean;
   readOnly?: boolean;
@@ -45,6 +46,7 @@ const TextField: React.FC<TextFieldProps> = ({
   placeholder,
   helperText,
   validationState,
+  error,
   size = "medium",
   disabled = false,
   readOnly = false,
@@ -83,7 +85,8 @@ const TextField: React.FC<TextFieldProps> = ({
   const containerClasses = [
     "textfield-container",
     `textfield-${size}`,
-    validationState && `textfield-${validationState}`,
+    (validationState || (error ? "error" : undefined)) &&
+      `textfield-${validationState || "error"}`,
     isFocused && "textfield-focused",
     disabled && "textfield-disabled",
     readOnly && "textfield-readonly",
@@ -116,14 +119,18 @@ const TextField: React.FC<TextFieldProps> = ({
         {required && <span className="textfield-required">*</span>}
       </label>
 
-      {helperText && (
+      {(error || helperText) && (
         <div
           id={`${id}-helper-text`}
           className={`textfield-helper-text ${
-            validationState ? `textfield-helper-${validationState}` : ""
+            error
+              ? "textfield-helper-error"
+              : validationState
+              ? `textfield-helper-${validationState}`
+              : ""
           }`}
         >
-          {helperText}
+          {error || helperText}
         </div>
       )}
 

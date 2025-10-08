@@ -20,6 +20,13 @@ const FormDetailView: React.FC = () => {
   );
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formDataToSubmit, setFormDataToSubmit] = useState<any>(null);
+  const [validationErrors, setValidationErrors] = useState<{
+    [sectionIdx: number]: {
+      [instanceIdx: number]: {
+        [fieldIdx: number]: string;
+      };
+    };
+  }>({});
 
   const { formId } = useParams<{ formId: string }>();
   const { form, isLoading, error: formError } = useForm(formId ?? "");
@@ -118,6 +125,25 @@ const FormDetailView: React.FC = () => {
     fieldIdx: number,
     value: string
   ) => {
+    // Clear validation error for this field when user starts typing
+    if (validationErrors[sectionIdx]?.[instanceIdx]?.[fieldIdx]) {
+      setValidationErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
+        if (newErrors[sectionIdx]?.[instanceIdx]?.[fieldIdx]) {
+          delete newErrors[sectionIdx][instanceIdx][fieldIdx];
+
+          // Clean up empty objects
+          if (Object.keys(newErrors[sectionIdx][instanceIdx]).length === 0) {
+            delete newErrors[sectionIdx][instanceIdx];
+          }
+          if (Object.keys(newErrors[sectionIdx]).length === 0) {
+            delete newErrors[sectionIdx];
+          }
+        }
+        return newErrors;
+      });
+    }
+
     setOneAnswer(sectionIdx, instanceIdx, fieldIdx, value);
   };
 
@@ -153,7 +179,92 @@ const FormDetailView: React.FC = () => {
     }
   };
 
+  const validateForm = () => {
+    // console.log("=== VALIDATION START ===");
+    const errors: {
+      [sectionIdx: number]: {
+        [instanceIdx: number]: {
+          [fieldIdx: number]: string;
+        };
+      };
+    } = {};
+
+    let hasErrors = false;
+
+    if (Array.isArray(form.sections)) {
+      // console.log("Form has", form.sections.length, "sections");
+      form.sections.forEach((section: any, sectionIdx: number) => {
+        // console.log(`Checking section ${sectionIdx}:`, section.title);
+        // Get number of instances for this section (at least 1)
+        const instanceCount = Math.max(
+          1,
+          (sectionInstances[sectionIdx] || 0) + 1
+        );
+        // console.log(`Section ${sectionIdx} has ${instanceCount} instances`);
+
+        for (let instanceIdx = 0; instanceIdx < instanceCount; instanceIdx++) {
+          // console.log(`Checking instance ${instanceIdx}`);
+          if (Array.isArray(section.fields)) {
+            section.fields.forEach((field: any, fieldIdx: number) => {
+              // console.log(
+              //   `Checking field ${fieldIdx}: ${field.label}, required: ${field.required}`
+              // );
+              if (field.required) {
+                const fieldValue =
+                  answers?.[sectionIdx]?.[instanceIdx]?.[fieldIdx];
+                // console.log(`Field value:`, fieldValue);
+
+                if (!fieldValue || fieldValue.trim() === "") {
+                  // console.log(
+                  //   `ERROR: Required field "${field.label}" is empty`
+                  // );
+                  if (!errors[sectionIdx]) errors[sectionIdx] = {};
+                  if (!errors[sectionIdx][instanceIdx])
+                    errors[sectionIdx][instanceIdx] = {};
+
+                  errors[sectionIdx][instanceIdx][
+                    fieldIdx
+                  ] = `${field.label} is verplicht`;
+                  hasErrors = true;
+                } else {
+                  // console.log(`Field "${field.label}" is valid`);
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+
+    // console.log("Final errors object:", errors);
+    // console.log("Has errors:", hasErrors);
+    setValidationErrors(errors);
+    // console.log("=== VALIDATION END ===");
+    return !hasErrors;
+  };
+
   const handleSubmitConfirm = async () => {
+    // Double-check validation before final submission
+    const isValid = validateForm();
+    // console.log("Final validation before submission:", isValid);
+
+    if (!isValid) {
+      // console.log("Validation failed on confirmation, closing modal");
+      setShowConfirmModal(false);
+      // Scroll to first error field
+      setTimeout(() => {
+        const firstErrorElement = document.querySelector(
+          ".input-container.error, .textfield-error, .select-error, .multiselect-error"
+        );
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, 100);
+      return;
+    }
     setIsSubmitting(true);
     try {
       await submitForm(formId ?? "", form.title, formDataToSubmit);
@@ -166,6 +277,47 @@ const FormDetailView: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // console.log("Form submission started...");
+    // console.log("Current answers:", answers);
+    // console.log("Current form sections:", form?.sections);
+
+    // Validate form before submission
+    const isValid = validateForm();
+    // console.log("Validation result:", isValid);
+    // console.log("Validation errors after validation:", validationErrors);
+
+    if (!isValid) {
+      // console.log("Validation failed, preventing submission");
+      // Scroll to first error field if validation fails
+      setTimeout(() => {
+        const firstErrorElement = document.querySelector(
+          ".input-container.error, .textfield-error, .select-error, .multiselect-error"
+        );
+        // console.log("First error element found:", firstErrorElement);
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Try to focus the input within the error element
+          const inputElement = firstErrorElement.querySelector(
+            "input, select, textarea"
+          );
+          if (
+            inputElement &&
+            typeof (inputElement as HTMLElement).focus === "function"
+          ) {
+            (inputElement as HTMLElement).focus();
+          }
+        }
+      }, 100); // Small delay to ensure DOM is updated
+      return;
+    }
+
+    // console.log("Validation passed, proceeding with submission");    // Clear any previous validation errors since form is valid
+    setValidationErrors({});
 
     // Restore answers grouped under section titles, with instances and field labels
     const final: any = {};
@@ -204,6 +356,14 @@ const FormDetailView: React.FC = () => {
                 sectionIdx={sectionIdx}
                 instances={sectionInstances[sectionIdx] || 0}
                 fieldValues={answers?.[sectionIdx] || {}}
+                validationErrors={(() => {
+                  const sectionErrors = validationErrors?.[sectionIdx] || {};
+                  // console.log(
+                  //   `Passing validation errors for section ${sectionIdx}:`,
+                  //   sectionErrors
+                  // );
+                  return sectionErrors;
+                })()}
                 onFieldChange={(
                   instanceIdx: number,
                   fieldIdx: number,
@@ -218,6 +378,7 @@ const FormDetailView: React.FC = () => {
               />
             ))}
           <Button
+            onClick={() => validateForm()}
             text={
               isSubmitting || isApiSubmitting
                 ? "Aan het verzenden..."

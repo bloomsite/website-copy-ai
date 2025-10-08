@@ -18,6 +18,7 @@ interface MultiselectProps {
   placeholder?: string;
   helperText?: string;
   validationState?: "success" | "error" | "warning";
+  error?: string; // Error message to display
   size?: "small" | "medium" | "large";
   disabled?: boolean;
   required?: boolean;
@@ -37,6 +38,7 @@ const Multiselect: React.FC<MultiselectProps> = ({
   placeholder = "Selecteer opties...",
   helperText,
   validationState,
+  error,
   size = "medium",
   disabled = false,
   required = false,
@@ -91,7 +93,8 @@ const Multiselect: React.FC<MultiselectProps> = ({
   const containerClasses = [
     "multiselect-container",
     `multiselect-${size}`,
-    validationState && `multiselect-${validationState}`,
+    (validationState || (error ? "error" : undefined)) &&
+      `multiselect-${validationState || "error"}`,
     isFocused && "multiselect-focused",
     isOpen && "multiselect-open",
     disabled && "multiselect-disabled",
@@ -163,14 +166,18 @@ const Multiselect: React.FC<MultiselectProps> = ({
         )}
       </div>
 
-      {helperText && (
+      {(error || helperText) && (
         <div
           id={`${id}-helper-text`}
           className={`multiselect-helper-text ${
-            validationState ? `multiselect-helper-${validationState}` : ""
+            error
+              ? "multiselect-helper-error"
+              : validationState
+              ? `multiselect-helper-${validationState}`
+              : ""
           }`}
         >
-          {helperText}
+          {error || helperText}
         </div>
       )}
     </div>

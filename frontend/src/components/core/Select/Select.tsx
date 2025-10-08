@@ -18,6 +18,7 @@ interface SelectProps {
   placeholder?: string;
   helperText?: string;
   validationState?: "success" | "error" | "warning";
+  error?: string; // Error message to display
   size?: "small" | "medium" | "large";
   disabled?: boolean;
   required?: boolean;
@@ -37,6 +38,7 @@ const Select: React.FC<SelectProps> = ({
   placeholder = "Selecteer een optie...",
   helperText,
   validationState,
+  error,
   size = "medium",
   disabled = false,
   required = false,
@@ -67,7 +69,8 @@ const Select: React.FC<SelectProps> = ({
   const containerClasses = [
     "select-container",
     `select-${size}`,
-    validationState && `select-${validationState}`,
+    (validationState || (error ? "error" : undefined)) &&
+      `select-${validationState || "error"}`,
     isFocused && "select-focused",
     disabled && "select-disabled",
     className,
@@ -107,14 +110,18 @@ const Select: React.FC<SelectProps> = ({
         <div className="select-arrow">▼</div>
       </div>
 
-      {helperText && (
+      {(error || helperText) && (
         <div
           id={`${id}-helper-text`}
           className={`select-helper-text ${
-            validationState ? `select-helper-${validationState}` : ""
+            error
+              ? "select-helper-error"
+              : validationState
+              ? `select-helper-${validationState}`
+              : ""
           }`}
         >
-          {helperText}
+          {error || helperText}
         </div>
       )}
     </div>

@@ -39,6 +39,23 @@
   cursor: not-allowed;
 }
 
+/* Error styles */
+.input-container.error .input-field {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-container.error .file-input-button {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 2px;
+}
+
 .file-input-hidden {
   display: none;
 }

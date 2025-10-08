@@ -21,6 +21,11 @@ interface FormDetailSectionProps {
       [fieldIndex: number]: string;
     };
   };
+  validationErrors: {
+    [instanceIndex: number]: {
+      [fieldIndex: number]: string;
+    };
+  };
   onFieldChange: (instanceIdx: number, fieldIdx: number, value: string) => void;
   onAddInstance: () => void;
   onRemoveInstance: (instanceIdx: number) => void;
@@ -31,6 +36,7 @@ const FormDetailSection: React.FC<FormDetailSectionProps> = ({
   sectionIdx,
   instances,
   fieldValues,
+  validationErrors,
   onFieldChange,
   onAddInstance,
   onRemoveInstance,
@@ -68,102 +74,112 @@ const FormDetailSection: React.FC<FormDetailSectionProps> = ({
           </div>
 
           {Array.isArray(section.fields) &&
-            section.fields.map((field: FormField, fieldIdx: number) => (
-              <div key={fieldIdx} className="form-field-row">
-                {field.type === "multiselect" ? (
-                  <Multiselect
-                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
-                    label={field.label}
-                    values={(fieldValues[instanceIdx]?.[fieldIdx] ?? "")
-                      .split(",")
-                      .filter(Boolean)}
-                    onChange={(values) =>
-                      onFieldChange(instanceIdx, fieldIdx, values.join(","))
-                    }
-                    options={
-                      field.options?.map(
-                        (opt): { value: string; label: string } =>
-                          typeof opt === "object" &&
-                          opt !== null &&
-                          "value" in opt &&
-                          "label" in opt
-                            ? {
-                                value: String(opt.value),
-                                label: String(opt.label),
-                              }
-                            : { value: String(opt), label: String(opt) }
-                      ) ?? []
-                    }
-                    helperText={field.description}
-                    required={field.required}
-                    className="form-field-input"
-                    placeholder={field.placeholder || "Selecteer opties..."}
-                    size="large"
-                  />
-                ) : field.type === "select" || field.type === "select_few" ? (
-                  <Select
-                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
-                    label={field.label}
-                    value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
-                    onChange={(value) =>
-                      onFieldChange(instanceIdx, fieldIdx, value)
-                    }
-                    options={
-                      field.options?.map(
-                        (opt): { value: string; label: string } =>
-                          typeof opt === "object" &&
-                          opt !== null &&
-                          "value" in opt &&
-                          "label" in opt
-                            ? {
-                                value: String(opt.value),
-                                label: String(opt.label),
-                              }
-                            : { value: String(opt), label: String(opt) }
-                      ) ?? []
-                    }
-                    helperText={field.description}
-                    required={field.required}
-                    className="form-field-input"
-                    placeholder={field.placeholder || "Selecteer een optie..."}
-                    size="large"
-                  />
-                ) : field.type === "image" ? (
-                  <Input
-                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
-                    label={field.label}
-                    type="file"
-                    accept="image/*"
-                    onChange={(value) =>
-                      onFieldChange(instanceIdx, fieldIdx, value)
-                    }
-                    onFileSelect={(file) => {
-                      // TODO: Upload to Azure Blob Storage
-                      console.log("File selected:", file);
-                    }}
-                    helperText={field.description}
-                    required={field.required}
-                    className="form-field-input"
-                    size="large"
-                  />
-                ) : (
-                  <TextField
-                    helperText={field.description}
-                    size={"large"}
-                    id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
-                    label={field.label}
-                    value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
-                    onChange={(value) =>
-                      onFieldChange(instanceIdx, fieldIdx, value)
-                    }
-                    multiline={field.type === "text_area"}
-                    required={field.required}
-                    className="form-field-input"
-                    placeholder={field.placeholder}
-                  />
-                )}
-              </div>
-            ))}
+            section.fields.map((field: FormField, fieldIdx: number) => {
+              const fieldError = validationErrors[instanceIdx]?.[fieldIdx];
+
+              return (
+                <div key={fieldIdx} className="form-field-row">
+                  {field.type === "multiselect" ? (
+                    <Multiselect
+                      id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                      label={field.label}
+                      values={(fieldValues[instanceIdx]?.[fieldIdx] ?? "")
+                        .split(",")
+                        .filter(Boolean)}
+                      onChange={(values) =>
+                        onFieldChange(instanceIdx, fieldIdx, values.join(","))
+                      }
+                      options={
+                        field.options?.map(
+                          (opt): { value: string; label: string } =>
+                            typeof opt === "object" &&
+                            opt !== null &&
+                            "value" in opt &&
+                            "label" in opt
+                              ? {
+                                  value: String(opt.value),
+                                  label: String(opt.label),
+                                }
+                              : { value: String(opt), label: String(opt) }
+                        ) ?? []
+                      }
+                      helperText={field.description}
+                      required={field.required}
+                      className="form-field-input"
+                      placeholder={field.placeholder || "Selecteer opties..."}
+                      size="large"
+                      error={fieldError}
+                    />
+                  ) : field.type === "select" || field.type === "select_few" ? (
+                    <Select
+                      id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                      label={field.label}
+                      value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
+                      onChange={(value) =>
+                        onFieldChange(instanceIdx, fieldIdx, value)
+                      }
+                      options={
+                        field.options?.map(
+                          (opt): { value: string; label: string } =>
+                            typeof opt === "object" &&
+                            opt !== null &&
+                            "value" in opt &&
+                            "label" in opt
+                              ? {
+                                  value: String(opt.value),
+                                  label: String(opt.label),
+                                }
+                              : { value: String(opt), label: String(opt) }
+                        ) ?? []
+                      }
+                      helperText={field.description}
+                      required={field.required}
+                      className="form-field-input"
+                      placeholder={
+                        field.placeholder || "Selecteer een optie..."
+                      }
+                      size="large"
+                      error={fieldError}
+                    />
+                  ) : field.type === "image" ? (
+                    <Input
+                      id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                      label={field.label}
+                      type="file"
+                      accept="image/*"
+                      onChange={(value) =>
+                        onFieldChange(instanceIdx, fieldIdx, value)
+                      }
+                      onFileSelect={(file) => {
+                        // TODO: Upload to Azure Blob Storage
+                        console.log("File selected:", file);
+                      }}
+                      helperText={field.description}
+                      required={field.required}
+                      className="form-field-input"
+                      size="large"
+                      error={fieldError}
+                    />
+                  ) : (
+                    <TextField
+                      helperText={field.description}
+                      size={"large"}
+                      id={`section-${sectionIdx}-instance-${instanceIdx}-field-${fieldIdx}`}
+                      label={field.label}
+                      value={fieldValues[instanceIdx]?.[fieldIdx] ?? ""}
+                      onChange={(value) =>
+                        onFieldChange(instanceIdx, fieldIdx, value)
+                      }
+                      multiline={field.type === "text_area"}
+                      required={field.required}
+                      className="form-field-input"
+                      placeholder={field.placeholder}
+                      error={fieldError}
+                    />
+                  )}
+                </div>
+              );
+            })}
         </div>
       ))}
 
