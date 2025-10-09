@@ -25,6 +25,42 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
     });
   };
 
+  // Function to check if a value is an image URI
+  const isImageUri = (value: string): boolean => {
+    if (typeof value !== "string") return false;
+
+    // Check if it's a blob storage URL with image-like patterns
+    const isBlobUrl = value.includes("blob.core.windows.net");
+    const hasImageExtension = /\.(jpg|jpeg|png|gif|bmp|webp)(\?|$)/i.test(
+      value
+    );
+    const isBlobStorage = /\.blob\.core\.windows\.net\/images\//i.test(value);
+
+    return isBlobUrl || hasImageExtension || isBlobStorage;
+  };
+
+  // Function to render field value (either as text or image)
+  const renderFieldValue = (value: string) => {
+    if (isImageUri(value)) {
+      return (
+        <div className="form-detail-modal__image-container">
+          <img
+            src={value}
+            alt="Uploaded image"
+            className="form-detail-modal__image"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = "none";
+              target.parentElement!.appendChild(document.createTextNode(value));
+            }}
+          />
+        </div>
+      );
+    }
+    return value;
+  };
+
   const { isDeleting, deleteForm } = useDeleteForm();
 
   // Close modal when clicking outside
@@ -94,7 +130,7 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
                         {fieldName}
                       </div>
                       <div className="form-detail-modal__field-value">
-                        {value}
+                        {renderFieldValue(value)}
                       </div>
                     </div>
                   ))}
