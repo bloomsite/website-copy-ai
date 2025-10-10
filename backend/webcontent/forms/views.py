@@ -229,7 +229,7 @@ class FormSubmitView(APIView):
                 form_data = form_answers, 
             )
 
-            if submitted_form is not None: 
+            if submitted_user_id is not None: 
                 submitted_form.form_type = FormType.AI_GENERATED
 
             submitted_form.save()
@@ -334,6 +334,7 @@ class UserFormSubmissionsView(APIView):
 
         User = get_user_model()
         user = get_object_or_404(User, uuid=request_user_uuid)
+
 
         submissions = FormSubmission.objects.filter(user=user).order_by('-submitted_at')
         

@@ -8,6 +8,7 @@ import Button from "../../core/Button/Button";
 import Modal from "../../core/Modal/Modal";
 import "./FormConfirmView.css";
 import { useConfirmForm } from "../../../hooks/Forms/useConfirmForm";
+import { useUserFormSubmissions } from "../../../hooks/Forms/useUserFormSubmissions";
 
 interface AnswerField {
   question: string;
@@ -18,6 +19,7 @@ const FormConfirmView: React.FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const { form } = useForm(formId ?? "");
   const [answerFields, setAnswerFields] = useState<AnswerField[]>([]);
+  const [confirmIsSubmitted, setConfirmIsSubmitted] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
@@ -27,6 +29,7 @@ const FormConfirmView: React.FC = () => {
   } = useConfirmForm();
 
   const navigate = useNavigate();
+  const { submissions, isFormConfirmed } = useUserFormSubmissions();
 
   const token = window.localStorage.getItem("access_token") ?? "";
   const userId = window.localStorage.getItem("user_uuid");
@@ -49,6 +52,14 @@ const FormConfirmView: React.FC = () => {
       setAnswerFields(fields);
     }
   }, [answers]);
+
+  // check if form has already been confirmed
+  useEffect(() => {
+    if (typeof formId === "string") {
+      setConfirmIsSubmitted(isFormConfirmed(formId));
+      console.log("conf status", confirmIsSubmitted);
+    }
+  }, [submissions, formId]);
 
   const handleFieldChange = (index: number, newAnswer: string) => {
     const updatedFields = [...answerFields];
@@ -138,6 +149,7 @@ const FormConfirmView: React.FC = () => {
                 onClick={() => setShowConfirmModal(true)}
                 isLoading={isSubmitting}
                 className="confirm-button"
+                disabled={confirmIsSubmitted}
               />
             </div>
 

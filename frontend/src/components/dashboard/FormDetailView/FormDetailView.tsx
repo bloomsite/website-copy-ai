@@ -8,6 +8,7 @@ import Button from "../../core/Button/Button";
 import Modal from "../../core/Modal/Modal";
 import FormDetailSection from "./FormDetailSection";
 import { useFormProgress } from "../../../hooks/Database/useFormProgress";
+import { useUserFormSubmissions } from "../../../hooks/Forms/useUserFormSubmissions";
 
 interface SectionInstances {
   [sectionIndex: number]: number;
@@ -28,10 +29,12 @@ const FormDetailView: React.FC = () => {
     };
   }>({});
 
+  const { isFormSubmitted } = useUserFormSubmissions();
   const { formId } = useParams<{ formId: string }>();
   const { form, isLoading, error: formError } = useForm(formId ?? "");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(false);
 
   const {
     submitForm,
@@ -51,6 +54,10 @@ const FormDetailView: React.FC = () => {
   });
 
   useEffect(() => {
+    if (typeof form?.formId === "string") {
+      const checkSubmitStatus = isFormSubmitted(form.formId);
+      setSubmitStatus(checkSubmitStatus);
+    }
     // Only process answers if we have a valid form version
     if (form?.version && Array.isArray(form.sections)) {
       const inst: SectionInstances = {};
@@ -387,6 +394,7 @@ const FormDetailView: React.FC = () => {
             type="submit"
             isLoading={isSubmitting || isApiSubmitting}
             className="form-detail-submit"
+            disabled={submitStatus}
           />
           {error && <div className="form-detail-error">{error}</div>}
           {success && (
