@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from azure.cosmos import CosmosClient, exceptions as CosmosExceptions 
 
 from users.models import Role 
+from forms.models import FormType
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -199,7 +200,7 @@ class FormSubmitView(APIView):
         # this is only used forn answer forms 
         submitted_user_id = data.get("userId")
 
-        user = request.user 
+        user = request.user
 
         if not user.is_authenticated:
             return Response({"error": "user isn't authenticated"}, status=401)
@@ -227,6 +228,9 @@ class FormSubmitView(APIView):
                 form_name = form_name,
                 form_data = form_answers, 
             )
+
+            if submitted_form is not None: 
+                submitted_form.form_type = FormType.AI_GENERATED
 
             submitted_form.save()
         except json.JSONDecodeError:

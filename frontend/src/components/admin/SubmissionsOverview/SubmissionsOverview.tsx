@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFromSubmissions } from "../../../hooks/Forms/useFormSubmissions";
 import "./SubmissionsOverview.css";
+import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZE = 20;
 
@@ -39,7 +40,10 @@ const SubmissionsOverview: React.FC = () => {
   );
   const totalPages = Math.ceil(filteredSubmissions.length / PAGE_SIZE);
 
-  const handleNavigate = () => {};
+  const navigate = useNavigate();
+  const handleNavigate = (userId: string) => {
+    navigate(`/admin/users/${userId}/`);
+  };
 
   useEffect(() => {
     fetchSubmissions();
@@ -109,7 +113,7 @@ const SubmissionsOverview: React.FC = () => {
               <td className="actions-cell">
                 <button
                   className="profile-button"
-                  onClick={() => handleNavigate()}
+                  onClick={() => handleNavigate(submission.userId)}
                 >
                   Profiel bekijken
                 </button>
