@@ -12,6 +12,7 @@ const ContentWriter = React.lazy(() => import('../pages/ContentWriter/ContentWri
 const RegisterPage = React.lazy(() => import('../pages/RegisterPage/RegisterPage'))
 const OnboardingPage = React.lazy(() => import('../pages/OnboardingPage/OnboardingPage'))
 const LoginPage = React.lazy(() => import('../pages/LoginPage/LoginPage'))
+const AuthenticationPage = React.lazy(() => import('../pages/AuthenticationPage/AuthenticationPage'))
 
 // Admin 
 const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
@@ -64,4 +65,7 @@ export const routes: RouteConfig[]  = [
     {path: '/admin/users/:userId', element: UserProfilePage ,isProtected:true},
     {path: '/admin/invite', element: InviteUser ,isProtected:true},
     {path: '/admin/submissions', element: SubmissionOverview, isProtected: true},
+
+    // Authorization and Diagnostics 
+    {path: '/me', element: AuthenticationPage, isProtected: false }
 ] 

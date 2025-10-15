@@ -101,7 +101,16 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
         <div className="form-detail-modal__actions">
           <button
             className="form-detail-modal__button form-detail-modal__button--export"
-            onClick={() => newExportFormToPDF(form)}
+            onClick={async () => {
+              try {
+                await newExportFormToPDF(form);
+              } catch (error) {
+                console.error("Error exporting PDF:", error);
+                alert(
+                  "Er is een fout opgetreden bij het exporteren van de PDF."
+                );
+              }
+            }}
           >
             PDF Exporteren
           </button>

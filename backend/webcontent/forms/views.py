@@ -30,6 +30,38 @@ def make_progression_id(user_id: str, form_id: str, form_version: str):
     pk_user_id = f"user:{user_id}"
     doc_id = f"form:{form_id}version{form_version}"
     return pk_user_id, doc_id
+
+class AvailableFormsOverviewView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request, *args, **kwargs):
+
+        user_role = request.user.role
+        is_active = request.params.get("isActive")
+
+
+        if not user_role == Role.ADMIN: 
+            return Response({"error":"You don't have authorization for this view"}, status=401) 
+
+        form_objects = Form.objects.all()
+
+        if is_active == True:
+            form_objects.filter(is_active=True)
+
+        doc = [{
+            "formName": form.title,
+            "formId": form.form_id, 
+            "formVersion": form.version, 
+            "formIsActive": form.is_active,
+            
+            
+            } for form in form_objects]
+        
+        return Response(doc, status=200)
+
+        
+        
     
 class FormsOverviewView(APIView):
     permission_classes = []

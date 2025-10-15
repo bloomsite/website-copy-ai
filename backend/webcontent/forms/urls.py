@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import FormsOverviewView, FormDetailView, FormSubmitView, UserFormSubmissionsView, FormProgressionView, DeleteUserFormView, UploadFormImageView, FormConfirmView, ConfirmsOverviewView, FormSubmissionsView
+from .views import FormsOverviewView, FormDetailView, FormSubmitView, UserFormSubmissionsView, FormProgressionView, DeleteUserFormView, UploadFormImageView, FormConfirmView, ConfirmsOverviewView, FormSubmissionsView, AvailableFormsOverviewView
 
 urlpatterns = [
     path("forms-overview", FormsOverviewView.as_view(),name="public forms"),
+    path("available-forms-overview", AvailableFormsOverviewView.as_view(), name="avalable forms overview"),
     path("confirms-overview", ConfirmsOverviewView.as_view(),name="public forms"),
     path("<str:form_id>", FormDetailView.as_view(),name="public forms"),
     path("progress/", FormProgressionView.as_view(), name="form progression" ),

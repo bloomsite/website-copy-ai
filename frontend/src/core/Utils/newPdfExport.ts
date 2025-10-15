@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import type { FormSubmission } from '../../hooks/Users/useUserDetail';
 
-export const newExportFormToPDF = (form: FormSubmission) => {
+export const newExportFormToPDF = async (form: FormSubmission) => {
     const pdf = new jsPDF();
     
     // Configuration
@@ -24,6 +24,162 @@ export const newExportFormToPDF = (form: FormSubmission) => {
         section: 8,
         content: 7,
         gap: 5
+    };
+
+    // Helper to check if a string is an image URL
+    const isImageUrl = (text: string): boolean => {
+        if (typeof text !== 'string') return false;
+        
+        // Check for Azure blob storage URLs or other image URLs
+        const imageUrlPattern = /\.(jpg|jpeg|png|gif|webp|bmp)(\?|$)/i;
+        const azureBlobPattern = /\.blob\.core\.windows\.net\/.*images\//i;
+        const httpUrlPattern = /^https?:\/\//i;
+        
+        // If it's an Azure blob URL with 'images' in the path, it's likely an image
+        if (azureBlobPattern.test(text)) {
+            console.log('Detected Azure blob image URL:', text);
+            return true;
+        }
+        
+        // Check for standard image file extensions
+        if (httpUrlPattern.test(text) && imageUrlPattern.test(text)) {
+            console.log('Detected standard image URL:', text);
+            return true;
+        }
+        
+        return false;
+    };
+
+    // Helper to load image and get dimensions
+    const loadImage = (url: string): Promise<{ img: HTMLImageElement; width: number; height: number }> => {
+        return new Promise((resolve, reject) => {
+            // First try to fetch the image as a blob to handle CORS better
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const img = new Image();
+                    const objectUrl = URL.createObjectURL(blob);
+                    
+                    img.onload = () => {
+                        console.log('Image loaded successfully via fetch, dimensions:', img.width, 'x', img.height);
+                        
+                        // Clean up the object URL
+                        URL.revokeObjectURL(objectUrl);
+                        
+                        // Calculate dimensions to fit within content width
+                        const maxWidth = contentWidth - 20; // Leave some padding
+                        const maxHeight = 100; // Maximum height in mm
+                        
+                        let { width, height } = img;
+                        
+                        // Convert pixels to mm (approximate: 1mm = 3.78 pixels at 96 DPI)
+                        width = width / 3.78;
+                        height = height / 3.78;
+                        
+                        // Scale down if too large
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+                        
+                        if (height > maxHeight) {
+                            width = (width * maxHeight) / height;
+                            height = maxHeight;
+                        }
+                        
+                        console.log('Scaled image dimensions for PDF:', width, 'x', height, 'mm');
+                        resolve({ img, width, height });
+                    };
+                    
+                    img.onerror = () => {
+                        URL.revokeObjectURL(objectUrl);
+                        reject(new Error('Failed to load image from blob'));
+                    };
+                    
+                    img.src = objectUrl;
+                })
+                .catch(fetchError => {
+                    console.warn('Fetch failed, trying direct image load:', fetchError);
+                    
+                    // Fallback to direct image loading
+                    const img = new Image();
+                    
+                    // Try without CORS first for Azure blob storage
+                    img.onload = () => {
+                        console.log('Image loaded successfully via direct load, dimensions:', img.width, 'x', img.height);
+                        
+                        const maxWidth = contentWidth - 20;
+                        const maxHeight = 100;
+                        
+                        let { width, height } = img;
+                        width = width / 3.78;
+                        height = height / 3.78;
+                        
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+                        
+                        if (height > maxHeight) {
+                            width = (width * maxHeight) / height;
+                            height = maxHeight;
+                        }
+                        
+                        resolve({ img, width, height });
+                    };
+                    
+                    img.onerror = (error) => {
+                        console.error(`All image loading methods failed for: ${url}`, error);
+                        reject(new Error(`Failed to load image: ${url}`));
+                    };
+                    
+                    // Try without crossOrigin for Azure blob storage
+                    img.src = url;
+                });
+        });
+    };
+
+    // Helper to add image to PDF
+    const addImageToPDF = async (imageUrl: string, fieldName: string) => {
+        try {
+            console.log('Attempting to load image:', imageUrl);
+            const { img, width, height } = await loadImage(imageUrl);
+            
+            // Ensure we have space for the image
+            ensureSpace(height + LINE_HEIGHT.content + 5);
+            
+            // Add field name
+            addWrappedText(`${fieldName}:`, CONTENT_SIZE, LINE_HEIGHT.content);
+            yPosition += 2; // Small gap
+            
+            // Add the image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            if (ctx) {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                const imageData = canvas.toDataURL('image/jpeg', 0.8);
+                pdf.addImage(imageData, 'JPEG', margin, yPosition, width, height);
+                yPosition += height + 5; // Add some space after image
+                console.log('Successfully added image to PDF');
+            } else {
+                throw new Error('Could not get canvas context');
+            }
+            
+        } catch (error) {
+            console.warn('Failed to add image to PDF:', error);
+            // Fallback to text if image loading fails
+            const fieldText = `${fieldName}: [Image: ${imageUrl}]`;
+            addWrappedText(fieldText, CONTENT_SIZE, LINE_HEIGHT.content);
+        }
     };
 
     // Helper to check and add new page if needed
@@ -70,25 +226,35 @@ export const newExportFormToPDF = (form: FormSubmission) => {
     yPosition += LINE_HEIGHT.gap;
 
     // Process form data
-    Object.entries(form.formData).forEach(([sectionName, instances]) => {
+    for (const [sectionName, instances] of Object.entries(form.formData)) {
         // Add section header
         ensureSpace(LINE_HEIGHT.section);
         addWrappedText(sectionName, SECTION_SIZE, LINE_HEIGHT.section, true);
         yPosition += 3;
 
         // Process each instance's fields
-        Object.values(instances).forEach((fields, idx) => {
+        for (const [idx, fields] of Object.values(instances).entries()) {
             if (idx > 0) yPosition += 3;
 
             // Add fields
-            Object.entries(fields).forEach(([fieldName, value]) => {
-                const fieldText = `${fieldName}: ${value}`;
-                addWrappedText(fieldText, CONTENT_SIZE, LINE_HEIGHT.content);
-            });
-        });
+            for (const [fieldName, value] of Object.entries(fields)) {
+                console.log(`Processing field: ${fieldName}, value: ${value}, type: ${typeof value}`);
+                
+                if (typeof value === 'string' && isImageUrl(value)) {
+                    // Handle image field
+                    console.log('Processing as image field');
+                    await addImageToPDF(value, fieldName);
+                } else {
+                    // Handle regular text field
+                    console.log('Processing as text field');
+                    const fieldText = `${fieldName}: ${value}`;
+                    addWrappedText(fieldText, CONTENT_SIZE, LINE_HEIGHT.content);
+                }
+            }
+        }
 
         yPosition += LINE_HEIGHT.gap;
-    });
+    }
 
     // Save the PDF
     const fileName = `${form.formName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${

@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-import datetime 
 
 import uuid 
 
@@ -29,7 +28,7 @@ class User(AbstractUser):
 
     # Unique identifier for each user
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-
+    is_password_set = models.BooleanField(default=False)
     # Custom fields
     joined_date = models.DateField(default=timezone.now)
     tokens_used = models.IntegerField(default=0)

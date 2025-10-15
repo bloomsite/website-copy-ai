@@ -1,7 +1,6 @@
 from django.urls import path
-from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import RegisterClient, LoginView, LogoutView, UserOnboardingView, UserListView, UserDetailView
+from .views import RegisterClient, LoginView, LogoutView, UserOnboardingView, UserListView, UserDetailView, AuthenticationStatusView
 
 
 
@@ -18,4 +17,5 @@ urlpatterns = [
     # User management
     path('fetch/', UserListView.as_view(), name='fetch_users'),
     path('fetch/user/', UserDetailView.as_view(), name="fetch user detail"),
+    path('me/', AuthenticationStatusView.as_view())
 ]
