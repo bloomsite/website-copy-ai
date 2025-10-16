@@ -122,7 +122,7 @@ def upload_file_to_storage(user_id: str, file_obj: IO, *, max_retries: int = 3) 
     # Generate SAS token for read access. We require the account key for SAS generation.
     try:
         start_time = datetime.datetime.now(datetime.timezone.utc)
-        expiry_time = start_time + datetime.timedelta(days=7)
+        expiry_time = start_time + datetime.timedelta(days=90)
 
         sas_token = generate_blob_sas(
             account_name=blob_client.account_name,

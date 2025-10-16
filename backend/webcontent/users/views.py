@@ -12,6 +12,25 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .services.cosmosdb import update_user_profile
 
 from .models import User, Role
+from .serializers import SetPasswordSerializer
+
+class SetPasswordView(APIView):
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+
+        data: dict = self.request.data 
+
+        serializer_data = {
+            'password': data['password'], 
+            'confirm_password': data['confirm_password'], 
+            'token': data['token']
+        }
+
+        serializer = SetPasswordSerializer(serializer_data)
+        if not serializer.is_valid():
+            return Response(serializer.error, status=400)
 
 class UserOnboardingView(APIView):
     permission_classes = [permissions.AllowAny]
