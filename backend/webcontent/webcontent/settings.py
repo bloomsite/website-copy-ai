@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders", 
     "users", 
+    "emails", 
     "forms",
     "content_request",
     'rest_framework',
@@ -221,6 +222,15 @@ AZURE_COSMOS_CONTAINER_FORM_DEFINITIONS = os.getenv('AZURE_COSMOS_CONTAINER_FORM
 AZURE_COSMOS_CONTAINER_FORM_PROGRESSION = os.getenv('AZURE_COSMOS_CONTAINER_FORM_PROGRESSION')
 AZURE_COSMOS_CONTAINER_FORM_CONFIRMATION = os.getenv('AZURE_COSMOS_CONTAINER_FORM_CONFIRMATION')
 
+# Email server settings 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True 
+DEFAULT_FROM_EMAIL = "Bloom Online Platform"
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_APP_PASS_KEY')
+
 COSMOS = {
     # Authentication
     'ENDPOINT': AZURE_COSMOS_ENDPOINT,
@@ -238,3 +248,4 @@ COSMOS = {
 }
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+FRONTEND_URL = "http://localhost:5173"

@@ -9,10 +9,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from .services.cosmosdb import update_user_profile
 
-from .models import User, Role
+from .models import User, Role, PasswordResetToken
 from .serializers import SetPasswordSerializer
+from emails.views import set_password_email
+
+
 
 class SetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -28,9 +33,29 @@ class SetPasswordView(APIView):
             'token': data['token']
         }
 
-        serializer = SetPasswordSerializer(serializer_data)
+        serializer = SetPasswordSerializer(data=serializer_data)
         if not serializer.is_valid():
             return Response(serializer.error, status=400)
+        
+        token_uuid = serializer.validated_data['token']
+        token = get_object_or_404(PasswordResetToken, token=token_uuid)
+
+        if not token.is_valid():
+            return Response({"error","token is invalid"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = token.user 
+            user.set_password(serializer.validated_data['password'])
+            user.set_password = True
+            user.save()
+
+            token.is_used = True
+            token.save()
+
+            return Response({"detial":"success"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error":f"an unexpected error occured: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class UserOnboardingView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -98,6 +123,50 @@ class RegisterClient(APIView):
         user.save()
 
         return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+    
+class InviteClient(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs): 
+        data: dict = request.data
+                
+        email = data.get("email")
+        first_name = data.get("first_name")
+        last_name = data.get("last_name")
+
+        if not email:
+            return Response({"error": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "User with this email already exists"}, status=status.HTTP_409_CONFLICT)
+        
+        try:
+            user = User.objects.create(
+                email=email, 
+                username=email, 
+                first_name=first_name, 
+                last_name=last_name
+                )
+            user.set_unusable_password()
+            user_password_token = PasswordResetToken.objects.create(
+                user=user,
+            )
+            user_password_token.save()
+            reset_url = f"{settings.FRONTEND_URL}/set-password/{user_password_token.token}"
+
+            context = {
+                'first_name': user.first_name, 
+                'reset_url': reset_url, 
+            }
+
+            set_password_email(context=context, user_email=email)
+            return Response({"detail":"success"}, status=status.HTTP_201_CREATED)
+        except Exception as e: 
+            return Response({"error":f"an undexpected error occured: {e}"})
+
+
+
 
 # This is the login view 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):

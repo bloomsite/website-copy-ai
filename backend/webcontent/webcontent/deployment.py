@@ -46,3 +46,4 @@ DATABASES = {
 }
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+FRONTEND_URL = "https://app.bloomsite.nl"

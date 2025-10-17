@@ -9,16 +9,22 @@ const Start = React.lazy(() => import('../pages/Start/Start'))
 const ContentWriter = React.lazy(() => import('../pages/ContentWriter/ContentWriter'))
 
 // Authentication
-const RegisterPage = React.lazy(() => import('../pages/RegisterPage/RegisterPage'))
 const OnboardingPage = React.lazy(() => import('../pages/OnboardingPage/OnboardingPage'))
 const LoginPage = React.lazy(() => import('../pages/LoginPage/LoginPage'))
 const AuthenticationPage = React.lazy(() => import('../pages/AuthenticationPage/AuthenticationPage'))
+const SetPasswordPage = React.lazy(() =>
+    import('../pages/SetPasswordPage/SetPasswordPage').then((mod) => ({
+        default: (mod as any).SetPasswordPage || (mod as any).default,
+    }))
+)
 
 // Admin 
 const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
 const AdminUsers = React.lazy(() => import('../pages/AdminPages/AdminUsers/AdminUsers'))
 const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/InviteUsers'))
+const CreateUser = React.lazy(() => import('../pages/AdminPages/CreateUsers/CreateUsers'))
 const SubmissionOverview = React.lazy(() => import('../pages/AdminPages/AdminSubmissions/AdminSubmissions'))
+
 
 // Dashboard
 const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
@@ -48,7 +54,6 @@ export const routes: RouteConfig[]  = [
     {path: '/', element: DashboardForms, isProtected: false},
     {path: '/start', element: Start, isProtected: false},
     {path: '/content/:pageType', element: ContentWriter, isProtected: false},
-    {path: '/register', element: RegisterPage, isProtected: false},
     {path: '/login', element: LoginPage, isProtected: false},
     {path: '/onboarding', element: OnboardingPage, isProtected: true},
     
@@ -64,8 +69,11 @@ export const routes: RouteConfig[]  = [
     {path: '/admin/users', element: AdminUsers ,isProtected:true},
     {path: '/admin/users/:userId', element: UserProfilePage ,isProtected:true},
     {path: '/admin/invite', element: InviteUser ,isProtected:true},
+    {path: '/admin/create-user', element: CreateUser,isProtected:true},
     {path: '/admin/submissions', element: SubmissionOverview, isProtected: true},
 
     // Authorization and Diagnostics 
-    {path: '/me', element: AuthenticationPage, isProtected: false }
+    {path: '/me', element: AuthenticationPage, isProtected: false },
+    {path: '/set-password/:token', element: SetPasswordPage, isProtected: false },
+
 ] 

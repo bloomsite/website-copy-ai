@@ -31,6 +31,12 @@ export const sidebarItems: SidebarItem[] = [
     route: '/admin/invite',
     active: true, 
   },
+    {
+    title: 'Gebruiker Aanmaken',
+    icon: 'user-pen',
+    route: '/admin/create-user',
+    active: true, 
+  },
   {
     title: 'Instellingen',
     icon: 'settings',

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+import datetime 
 
 import uuid 
 
@@ -45,4 +46,23 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(default=timezone.now)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            # Token is na 30 dagen niet meer bruikbaar
+            self.expires_at = self.created_at + datetime.timedelta(days=30)
+        super().save(*args, **kwargs)
+
+    def is_valid(self):
+        return not self.is_used and self.expires_at > timezone.now()
+    
+    def __str__(self):
+        return f"Reset token belonging to {self.user}"
 
