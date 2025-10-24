@@ -26,6 +26,8 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
         gap: 5
     };
 
+
+
     // Helper to check if a string is an image URL
     const isImageUrl = (text: string): boolean => {
         if (typeof text !== 'string') return false;

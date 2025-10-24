@@ -17,6 +17,11 @@ const SetPasswordPage = React.lazy(() =>
         default: (mod as any).SetPasswordPage || (mod as any).default,
     }))
 )
+const ResetPasswordPage = React.lazy(() =>
+    import('../pages/ResetPasswordPage/ResetPasswordPage').then((mod) => ({
+        default: (mod as any).ResetPasswordPage || (mod as any).default,
+    }))
+)
 
 // Admin 
 const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
@@ -75,5 +80,7 @@ export const routes: RouteConfig[]  = [
     // Authorization and Diagnostics 
     {path: '/me', element: AuthenticationPage, isProtected: false },
     {path: '/set-password/:token', element: SetPasswordPage, isProtected: false },
+    {path: '/reset-password/:token', element: ResetPasswordPage, isProtected: false },
+    {path: '/forgot-password', element: ResetPasswordPage, isProtected: false },
 
 ] 

@@ -1,7 +1,9 @@
 import uuid
+
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.contrib.auth import get_user_model 
 from django.utils.text import slugify
+
 
 class FormType(models.TextChoices):
     USER_GENERATED = 'user_generated', "User Generated"

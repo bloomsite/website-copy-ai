@@ -1,6 +1,7 @@
 import React from "react";
 import type { FormSubmission } from "../../../hooks/Users/useUserDetail";
 import { newExportFormToPDF } from "../../../core/Utils/newPdfExport";
+import { newExportFormToPDFv2 } from "../../../core/Utils/PdfExportv2";
 import "./FormDetailModal.css";
 import { useDeleteForm } from "../../../hooks/Forms/useDeleteForm";
 
@@ -113,6 +114,22 @@ export const FormDetailModal: React.FC<FormDetailModalProps> = ({
             }}
           >
             PDF Exporteren
+          </button>
+          <button
+            className="form-detail-modal__button form-detail-modal__button--export"
+            onClick={async () => {
+              try {
+                await newExportFormToPDFv2(form);
+              } catch (error) {
+                console.error("Error exporting PDF v2:", error);
+                alert(
+                  "Er is een fout opgetreden bij het exporteren van de PDF v2."
+                );
+              }
+            }}
+            style={{ backgroundColor: "#e74c3c", marginLeft: "10px" }}
+          >
+            PDF Export v2 (Test)
           </button>
           <button
             className="form-detail-modal__button form-detail-modal__button--delete"

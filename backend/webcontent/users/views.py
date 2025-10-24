@@ -13,9 +13,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .services.cosmosdb import update_user_profile
 
-from .models import User, Role, PasswordResetToken
+from .models import User, Role, PasswordResetToken, TypePasswordSetToken
 from .serializers import SetPasswordSerializer
-from emails.views import set_password_email
+from emails.views import set_password_email, reset_password_email
 
 
 
@@ -164,6 +164,41 @@ class InviteClient(APIView):
             return Response({"detail":"success"}, status=status.HTTP_201_CREATED)
         except Exception as e: 
             return Response({"error":f"an undexpected error occured: {e}"})
+
+class RequestResetPasswordView(APIView):
+    authentication_classes = []
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs): 
+        data: dict = request.data
+                
+        email = data.get("email")
+
+        if not email:
+            return Response({"error": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+        if not User.objects.filter(email=email).exists():
+            return Response({"error": "User with this email already exists"}, status=status.HTTP_409_CONFLICT)
+        
+        try:
+            user = User.objects.filter(email=email).first()
+            user_password_token = PasswordResetToken.objects.create(
+                user=user,
+                type=TypePasswordSetToken.RESET_PASSWORD
+            )
+
+            user_password_token.save()
+            reset_url = f"{settings.FRONTEND_URL}/set-password/{user_password_token.token}"
+
+            context = {
+                'first_name': user.first_name, 
+                'reset_url': reset_url, 
+            }
+
+            reset_password_email(context=context, user_email=email)
+            return Response({"detail":"success"}, status=status.HTTP_201_CREATED)
+        except Exception as e: 
+            return Response({"error":f"an undexpected error occured: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

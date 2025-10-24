@@ -20,3 +20,20 @@
   max-width: 400px;
   margin: 1rem 0;
 }
+
+.forgot-password-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.forgot-password-link a {
+  color: var(--primary-color, #007bff);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+  color: var(--primary-color-hover, #0056b3);
+}

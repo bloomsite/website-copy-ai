@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import RegisterClient, LoginView, LogoutView, UserOnboardingView, UserListView, UserDetailView, AuthenticationStatusView, InviteClient, SetPasswordView
+from .views import RegisterClient, LoginView, LogoutView, UserOnboardingView, UserListView, UserDetailView, AuthenticationStatusView, InviteClient, SetPasswordView, RequestResetPasswordView
 
 
 
@@ -14,6 +14,7 @@ urlpatterns = [
     #Password Authentication and Invitations
     path("invite/", InviteClient.as_view(), name="invite user"),
     path("set-password/", SetPasswordView.as_view(), name="set password"),
+    path("reset-password/", RequestResetPasswordView.as_view(), name="reset password"),
 
     # onboarding
     path('onboarding/', UserOnboardingView.as_view(), name='user_onboarding'),

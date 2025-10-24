@@ -10,6 +10,10 @@ class Role(models.TextChoices):
     ADMIN = 'admin', 'Administrator'
     CLIENT = 'client', 'Client'
 
+class TypePasswordSetToken(models.TextChoices):
+    SET_PASSWORD = 'set_password', 'Set Password'
+    RESET_PASSWORD = 'reset_password', 'Reset Password'
+
 class User(AbstractUser):
     role = models.CharField(
         max_length=16,
@@ -53,6 +57,7 @@ class PasswordResetToken(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     expires_at = models.DateTimeField()
     is_used = models.BooleanField(default=False)
+    type = models.CharField(choices=TypePasswordSetToken.choices, default=TypePasswordSetToken.SET_PASSWORD)
 
     def save(self, *args, **kwargs):
         if not self.expires_at:

@@ -1,5 +1,10 @@
 from django.urls import path
-from .views import FormsOverviewView, FormDetailView, FormSubmitView, UserFormSubmissionsView, FormProgressionView, DeleteUserFormView, UploadFormImageView, FormConfirmView, ConfirmsOverviewView, FormSubmissionsView, AvailableFormsOverviewView
+
+from .views import (AvailableFormsOverviewView, ConfirmsOverviewView,
+                    DeleteUserFormView, FormConfirmView, FormDetailView,
+                    FormProgressionView, FormsOverviewView,
+                    FormSubmissionsView, FormSubmitView, UploadFormImageView,
+                    UserFormSubmissionsView)
 
 urlpatterns = [
     path("forms-overview", FormsOverviewView.as_view(),name="public forms"),

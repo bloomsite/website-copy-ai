@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Card from "../../core/Card/Card";
 import TextField from "../../core/TextField/TextField";
 import Button from "../../core/Button/Button";
@@ -62,6 +63,9 @@ export const Login: React.FC<LoginProps> = ({
             disabled={email === "" || password === "" ? true : false}
           ></Button>
         </form>
+        <div className="forgot-password-link">
+          <Link to="/forgot-password">Wachtwoord vergeten?</Link>
+        </div>
       </Card>
     </div>
   );

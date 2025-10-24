@@ -1,21 +1,19 @@
-import json 
-
-from django.conf import settings
-from django.shortcuts import get_object_or_404
-from django.utils import timezone 
-from django.contrib.auth import get_user_model
-from azure.cosmos import CosmosClient, exceptions as CosmosExceptions 
-
-from users.models import Role 
-from forms.models import FormType
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, permissions
-
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
+import json
 from typing import Any, Dict, List
+
+from azure.cosmos import CosmosClient
+from azure.cosmos import exceptions as CosmosExceptions
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from rest_framework import permissions, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from users.models import Role
+
+from forms.models import FormType
 
 from .models import Form, FormSubmission
 from .services.blob_storage import upload_file_to_storage
