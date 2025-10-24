@@ -26,6 +26,33 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
         gap: 5
     };
 
+    // Text sanitization function to remove emojis and special characters
+    const sanitizeText = (text: string): string => {
+        if (typeof text !== 'string') return String(text);
+        
+        return text
+            // Remove emojis and various Unicode ranges that cause issues
+            .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+            .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Misc Symbols and Pictographs
+            .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport and Map
+            .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Flags
+            .replace(/[\u{2600}-\u{26FF}]/gu, '') // Misc symbols
+            .replace(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
+            .replace(/[\u{1F900}-\u{1F9FF}]/gu, '') // Supplemental Symbols and Pictographs
+            .replace(/[\u{1F018}-\u{1F270}]/gu, '') // Various symbols
+            .replace(/[\u{238C}-\u{2454}]/gu, '') // Various symbols
+            .replace(/[\u{20D0}-\u{20FF}]/gu, '') // Combining marks
+            .replace(/[\u{FE00}-\u{FE0F}]/gu, '') // Variation selectors
+            .replace(/[\u{E000}-\u{F8FF}]/gu, '') // Private use area
+            // Remove zero-width characters
+            .replace(/[\u200B-\u200D\uFEFF]/g, '')
+            // Keep only basic Latin, numbers, common punctuation and Dutch characters
+            .replace(/[^\u0020-\u007E\u00A0-\u00FF\u0100-\u017F\u0180-\u024F]/g, '')
+            // Clean up multiple spaces
+            .replace(/\s+/g, ' ')
+            .trim();
+    };
+
 
 
     // Helper to check if a string is an image URL
@@ -156,7 +183,7 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
             ensureSpace(height + LINE_HEIGHT.content + 5);
             
             // Add field name
-            addWrappedText(`${fieldName}:`, CONTENT_SIZE, LINE_HEIGHT.content);
+            addWrappedText(`${sanitizeText(fieldName)}:`, CONTENT_SIZE, LINE_HEIGHT.content);
             yPosition += 2; // Small gap
             
             // Add the image
@@ -179,7 +206,7 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
         } catch (error) {
             console.warn('Failed to add image to PDF:', error);
             // Fallback to text if image loading fails
-            const fieldText = `${fieldName}: [Image: ${imageUrl}]`;
+            const fieldText = `${sanitizeText(fieldName)}: [Image: ${imageUrl}]`;
             addWrappedText(fieldText, CONTENT_SIZE, LINE_HEIGHT.content);
         }
     };
@@ -214,12 +241,12 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
     };
 
     // Add title
-    addWrappedText(form.formName, TITLE_SIZE, LINE_HEIGHT.title, true);
+    addWrappedText(sanitizeText(form.formName), TITLE_SIZE, LINE_HEIGHT.title, true);
     yPosition += LINE_HEIGHT.gap;
 
     // Add metadata
-    addWrappedText(`Formulier ID: ${form.formId}`, SUBTITLE_SIZE, LINE_HEIGHT.subtitle);
-    addWrappedText(`Versie: ${form.formVersion}`, SUBTITLE_SIZE, LINE_HEIGHT.subtitle);
+    addWrappedText(`Formulier ID: ${sanitizeText(form.formId)}`, SUBTITLE_SIZE, LINE_HEIGHT.subtitle);
+    addWrappedText(`Versie: ${sanitizeText(form.formVersion)}`, SUBTITLE_SIZE, LINE_HEIGHT.subtitle);
     addWrappedText(
         `Ingediend op: ${new Date(form.submittedAt).toLocaleString('nl-NL')}`,
         SUBTITLE_SIZE,
@@ -231,7 +258,7 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
     for (const [sectionName, instances] of Object.entries(form.formData)) {
         // Add section header
         ensureSpace(LINE_HEIGHT.section);
-        addWrappedText(sectionName, SECTION_SIZE, LINE_HEIGHT.section, true);
+        addWrappedText(sanitizeText(sectionName), SECTION_SIZE, LINE_HEIGHT.section, true);
         yPosition += 3;
 
         // Process each instance's fields
@@ -245,11 +272,15 @@ export const newExportFormToPDF = async (form: FormSubmission) => {
                 if (typeof value === 'string' && isImageUrl(value)) {
                     // Handle image field
                     console.log('Processing as image field');
-                    await addImageToPDF(value, fieldName);
+                    await addImageToPDF(value, sanitizeText(fieldName));
                 } else {
-                    // Handle regular text field
+                    // Handle regular text field - sanitize both field name and value
                     console.log('Processing as text field');
-                    const fieldText = `${fieldName}: ${value}`;
+                    const sanitizedFieldName = sanitizeText(fieldName);
+                    const sanitizedValue = sanitizeText(String(value));
+                    const fieldText = `${sanitizedFieldName}: ${sanitizedValue}`;
+                    console.log(`Original text: "${fieldName}: ${value}"`);
+                    console.log(`Sanitized text: "${fieldText}"`);
                     addWrappedText(fieldText, CONTENT_SIZE, LINE_HEIGHT.content);
                 }
             }
