@@ -228,8 +228,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True 
 DEFAULT_FROM_EMAIL = "Bloom Online Platform"
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_APP_PASS_KEY')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER_DEV')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_APP_PASS_KEY_DEV')
 
 COSMOS = {
     # Authentication
