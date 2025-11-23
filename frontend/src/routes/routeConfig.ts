@@ -38,7 +38,6 @@ const SpecialAgent = React.lazy(() => import("../pages/AdminPages/SpecialAgentPr
 const WorkflowProfile = React.lazy(() => import("../pages/AdminPages/WorkflowProfilePage/WorkflowProfilePage"))
 
 // Dashboard
-const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
 const DashboardForms = React.lazy(() => import('../pages/DashboardPages/DashboardForms/DashboardForms'))
 const FormDetailPage = React.lazy(() => import('../pages/DashboardPages/FormDetailPage/FormDetailPage'))
 const FormConfirmPage = React.lazy(() => import('../pages/DashboardPages/FormConfirmPage/FormConfirmPage'))
@@ -69,7 +68,6 @@ export const routes: RouteConfig[]  = [
     {path: '/onboarding', element: OnboardingPage, isProtected: true},
     
     // Dashboard Routes
-    {path: '/dashboard/overview', element: Dashboard, isProtected: true},
     {path: '/dashboard/forms', element: DashboardForms, isProtected: true},
     {path: '/forms/:formId/v/:version', element: FormDetailPage, isProtected: true},
     {path: '/confirm/:formId/v/:version', element: FormConfirmPage, isProtected: true},
