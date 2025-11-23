@@ -1,0 +1,92 @@
+.agent-profile-card {
+    width: 105px;
+    min-width: 300px;
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.agent-profile-card__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.agent-profile-card__avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #666;
+}
+
+.agent-profile-card__name-section {
+    flex-grow: 1;
+}
+
+.agent-profile-card__name {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.agent-profile-card__status {
+    color: #666;
+    font-size: 14px;
+    margin: 4px 0 0 0;
+}
+
+.agent-profile-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.agent-profile-card__info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.agent-profile-card__info-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.agent-profile-card__info-value {
+    font-size: 14px;
+    color: #333;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-badge.enabled {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.disabled {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.agent-profile-card__actions {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-start;
+}

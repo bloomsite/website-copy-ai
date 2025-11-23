@@ -1,0 +1,8 @@
+import NavigationSidebar from "../../../components/custom/NavigationSidebar/NavigationSidebar";
+import { sidebarItems } from "../../../core/Constants/sidebarItemsAdmin";
+
+const AdminForms = () => {
+  return <NavigationSidebar sidebarTitle="Admin" sidebarItems={sidebarItems} />;
+};
+
+export default AdminForms;

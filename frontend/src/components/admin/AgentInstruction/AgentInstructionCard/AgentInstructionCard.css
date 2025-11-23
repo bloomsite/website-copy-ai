@@ -1,0 +1,28 @@
+.agent-instruction-card {
+  width: 90%;
+  min-height: 300px;
+  margin-left: 15px
+}
+
+.agent-instruction-card__content {
+  margin-bottom: 24px;
+}
+
+.agent-instruction-card__text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.agent-instruction-card__actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 16px;
+}

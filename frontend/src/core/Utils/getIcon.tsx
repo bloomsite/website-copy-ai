@@ -10,6 +10,7 @@ import {
   Plus,
   Check,
   UserPen,
+  Workflow,
 } from "lucide-react";
 
 export const getIcon = (iconName: string, size: number = 20) => {
@@ -22,6 +23,8 @@ export const getIcon = (iconName: string, size: number = 20) => {
       return <FileText size={size} />;
     case "settings":
       return <Settings size={size} />;
+    case "workflow":
+      return <Workflow size={size} />;
     case "mail":
       return <Mail size={size} />;
     case "bot":

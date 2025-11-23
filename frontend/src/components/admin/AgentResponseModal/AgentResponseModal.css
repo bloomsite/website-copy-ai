@@ -1,0 +1,143 @@
+.agent-response-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.agent-response-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 900px;
+  width: 90%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.agent-response-modal__header {
+  margin-bottom: 24px;
+}
+
+.agent-response-modal__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.agent-response-modal__content {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 24px;
+}
+
+.agent-response-modal__input-section {
+  margin-bottom: 16px;
+}
+
+.agent-response-modal__label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.agent-response-modal__textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.agent-response-modal__textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.agent-response-modal__textarea:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.agent-response-modal__submit {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.agent-response-modal__loading {
+  padding: 16px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+  margin-bottom: 16px;
+}
+
+.agent-response-modal__loading p {
+  margin: 0;
+  color: #1565c0;
+  font-size: 15px;
+}
+
+.agent-response-modal__error {
+  padding: 16px;
+  background-color: #ffebee;
+  border-radius: 8px;
+  border-left: 4px solid #f44336;
+  margin-bottom: 16px;
+}
+
+.agent-response-modal__error p {
+  margin: 0;
+  color: #c62828;
+  font-size: 15px;
+}
+
+.agent-response-modal__response-section {
+  margin-top: 24px;
+}
+
+.agent-response-modal__response {
+  padding: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.agent-response-modal__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+}
+
+.agent-response-modal__close-button {
+  background-color: #ef4444;
+}
+
+.agent-response-modal__close-button:hover:not(:disabled) {
+  background-color: #dc2626;
+}

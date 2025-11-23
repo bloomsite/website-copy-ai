@@ -28,8 +28,14 @@ const Admin = React.lazy(() => import('../pages/AdminPages/Admin/Admin'))
 const AdminUsers = React.lazy(() => import('../pages/AdminPages/AdminUsers/AdminUsers'))
 const InviteUser = React.lazy(() => import('../pages/AdminPages/InviteUsers/InviteUsers'))
 const CreateUser = React.lazy(() => import('../pages/AdminPages/CreateUsers/CreateUsers'))
+const AdminAgents = React.lazy(() => import('../pages/AdminPages/AdminAgents/AdminAgents'))
+const AgentProfile = React.lazy(() => import('../pages/AdminPages/AgentProfilePage/AgentProfilePage'))
+const AdminForms = React.lazy(() => import('../pages/AdminPages/AdminForms/AdminForms'))
+const AdminSettings = React.lazy(() => import('../pages/AdminPages/AdminSettings/AdminSettings'))
+const AdminWorkflows = React.lazy(() => import('../pages/AdminPages/AdminWorkflows/AdminWorkflows'))
 const SubmissionOverview = React.lazy(() => import('../pages/AdminPages/AdminSubmissions/AdminSubmissions'))
-
+const SpecialAgent = React.lazy(() => import("../pages/AdminPages/SpecialAgentProfilePage/SpecialAgentProfilePage"))
+const WorkflowProfile = React.lazy(() => import("../pages/AdminPages/WorkflowProfilePage/WorkflowProfilePage"))
 
 // Dashboard
 const Dashboard = React.lazy(() => import('../pages/DashboardPages/DashboardOverview/Dashboard'))
@@ -68,7 +74,6 @@ export const routes: RouteConfig[]  = [
     {path: '/forms/:formId/v/:version', element: FormDetailPage, isProtected: true},
     {path: '/confirm/:formId/v/:version', element: FormConfirmPage, isProtected: true},
 
-
     // Admin Routes
     {path: '/admin', element: Admin ,isProtected:true},
     {path: '/admin/users', element: AdminUsers ,isProtected:true},
@@ -76,6 +81,13 @@ export const routes: RouteConfig[]  = [
     {path: '/admin/invite', element: InviteUser ,isProtected:true},
     {path: '/admin/create-user', element: CreateUser,isProtected:true},
     {path: '/admin/submissions', element: SubmissionOverview, isProtected: true},
+    {path: '/admin/agents', element: AdminAgents, isProtected: true},
+    {path: '/admin/agents/:agentName', element: AgentProfile, isProtected: true},
+    {path: '/admin/special-agents/:agentName', element: SpecialAgent, isProtected: true},
+    {path: '/admin/workflows', element: AdminWorkflows, isProtected: true},
+    {path: '/admin/forms', element: AdminForms, isProtected: true},
+    {path: '/admin/settings', element: AdminSettings, isProtected: true},
+    {path: '/admin/workflows/:workflowName', element: WorkflowProfile, isProtected: true},
 
     // Authorization and Diagnostics 
     {path: '/me', element: AuthenticationPage, isProtected: false },

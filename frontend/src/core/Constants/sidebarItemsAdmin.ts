@@ -43,4 +43,16 @@ export const sidebarItems: SidebarItem[] = [
     route: '/admin/settings',
     active: true, 
   },
+  {
+    title: 'Workflows',
+    icon: 'workflow',
+    route: '/admin/workflows',
+    active: true, 
+  },
+  {
+    title: 'Agents',
+    icon: 'bot',
+    route: '/admin/agents',
+    active: true, 
+  },
 ];

@@ -1,0 +1,51 @@
+.agent-detail-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 0 0 20rem;
+}
+
+.agent-detail-page__header {
+    margin-bottom: 24px;
+}
+
+.agent-detail-page__title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.agent-detail-page__subtitle {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+.agent-detail-page__content {
+    display: flex;
+    gap: 16px;
+}
+
+.agent-detail-page__profile-section {
+    flex-shrink: 0;
+    width: 320px;
+}
+
+.agent-detail-page__instruction-section {
+    flex: 1;
+    min-width: 0;
+    max-width: 900px;
+    margin-left:10px
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .agent-detail-page__content {
+        flex-direction: column;
+    }
+
+    .agent-detail-page__profile-section,
+    .agent-detail-page__instruction-section {
+        width: 100%;
+    }
+}
