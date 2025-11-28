@@ -1,32 +1,71 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useForm } from "../../../hooks/Forms/useForm";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFormsOverview } from "../../../hooks/Forms/useFormsOverview";
+import { useUserFormSubmissions } from "../../../hooks/Forms/useUserFormSubmissions";
 import Card from "../../core/Card/Card";
+import Button from "../../core/Button/Button";
 import "./FormOverview.css";
 
 const FormOverview: React.FC = () => {
-  const { formId } = useParams<{ formId: string }>();
-  const { form, isLoading, error } = useForm(formId ?? "");
+  const navigate = useNavigate();
+  const { retrieveForms, forms, isLoading, error } = useFormsOverview();
+  const { isFormSubmitted } = useUserFormSubmissions();
 
-  if (isLoading) {
-    return <div className="form-detail-loading">Loading...</div>;
-  }
+  useEffect(() => {
+    retrieveForms("user_generated").catch((err) => {
+      console.error("Error fetching forms:", err);
+    });
+  }, []);
+
+  const handleFillForm = (formId: string, formVersion: string) => {
+    navigate(`/forms/${formId}/v/${formVersion}`);
+  };
 
   if (error) {
-    return <div className="form-detail-error">{error}</div>;
-  }
-
-  if (!form) {
-    return <div className="form-detail-empty">No form found.</div>;
+    return (
+      <Card variant="outline" className="error-card">
+        <p className="error-message">{error}</p>
+        <Button text="Try Again" onClick={() => retrieveForms()} />
+      </Card>
+    );
   }
 
   return (
-    <div className="form-detail-container">
-      <Card title={form.title} subtitle={`Version: ${form.version}`}>
-        <p className="form-detail-description">{form.description}</p>
-        <p className="form-detail-short">{form.shortDescription}</p>
-        {/* Add more form details here as needed */}
-      </Card>
+    <div className="form-overview">
+      <h1 className="form-overview-title">Formulieren</h1>
+
+      <div className="forms-grid">
+        {isLoading
+          ? Array(6)
+              .fill(null)
+              .map((_, index) => (
+                <Card key={`skeleton-${index}`} className="form-card skeleton">
+                  <div className="skeleton-icon"></div>
+                  <div className="skeleton-title"></div>
+                  <div className="skeleton-description"></div>
+                  <div className="skeleton-button"></div>
+                </Card>
+              ))
+          : forms.map((form) => (
+              <Card
+                key={form.formId}
+                className={`form-card ${
+                  isFormSubmitted(form.formId) ? "submitted" : ""
+                }`}
+                title={form.title}
+              >
+                <p className="form-description">{form.shortDescription}</p>
+                <div className="form-footer">
+                  <Button
+                    text="Invullen"
+                    onClick={() => handleFillForm(form.formId, form.version)}
+                    className="fill-form-button"
+                    disabled={isFormSubmitted(form.formId) ? true : false}
+                  />
+                </div>
+              </Card>
+            ))}
+      </div>
     </div>
   );
 };

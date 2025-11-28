@@ -1,6 +1,6 @@
 import React from "react";
 import "./CreateUsers.css";
-import NavigationSidebar from "../../../components/custom/NavigationSidebar/NavigationSidebar";
+import NavigationSidebar from "../../../components/core/NavigationSidebar/NavigationSidebar";
 import { sidebarItems } from "../../../core/Constants/sidebarItemsAdmin";
 import Register from "../../../components/admin/Register/Register";
 import { useRegisterClient } from "../../../hooks/Authentication/useRegisterClient";

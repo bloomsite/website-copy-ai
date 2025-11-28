@@ -1,4 +1,4 @@
-import NavigationSidebar from "../../../components/custom/NavigationSidebar/NavigationSidebar";
+import NavigationSidebar from "../../../components/core/NavigationSidebar/NavigationSidebar";
 import FormConfirmView from "../../../components/dashboard/FormConfirmView/FormConfirmView";
 import { sidebarItems } from "../../../core/Constants/sidebarItemsClient";
 

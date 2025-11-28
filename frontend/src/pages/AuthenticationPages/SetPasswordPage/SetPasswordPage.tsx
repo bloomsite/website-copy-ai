@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Button from "../../components/core/Button/Button";
-import TextField from "../../components/core/TextField/TextField";
-import apiClient from "../../services/apiClient";
+import Button from "../../../components/core/Button/Button";
+import TextField from "../../../components/core/TextField/TextField";
+import apiClient from "../../../services/apiClient";
 import "./SetPasswordPage.css";
 
 export const SetPasswordPage: React.FC = () => {

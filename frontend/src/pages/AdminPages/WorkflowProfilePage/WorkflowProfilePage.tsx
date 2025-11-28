@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavigationSidebar from "../../../components/custom/NavigationSidebar/NavigationSidebar";
+import NavigationSidebar from "../../../components/core/NavigationSidebar/NavigationSidebar";
 import { sidebarItems } from "../../../core/Constants/sidebarItemsAdmin";
 import Button from "../../../components/core/Button/Button";
 import { useWorkflow } from "../../../hooks/Agents/useWorkflow";
@@ -26,22 +26,28 @@ const WorkflowProfilePage: React.FC = () => {
     try {
       // Parse the result if it's a JSON string
       const parsed = JSON.parse(result);
-      
+
       // If it's an array, find the text between markers
       if (Array.isArray(parsed)) {
-        const startIndex = parsed.findIndex(item => item === '=== FINAL COMPLETE TEXT ===');
-        const endIndex = parsed.findIndex(item => item === '=== END OF TEXT ===');
-        
+        const startIndex = parsed.findIndex(
+          (item) => item === "=== FINAL COMPLETE TEXT ==="
+        );
+        const endIndex = parsed.findIndex(
+          (item) => item === "=== END OF TEXT ==="
+        );
+
         if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
           return parsed[startIndex + 1];
         }
       }
-      
+
       return result;
     } catch {
       // If not JSON, check if it's the raw array string
-      if (result.includes('=== FINAL COMPLETE TEXT ===')) {
-        const match = result.match(/=== FINAL COMPLETE TEXT ==='\s*,\s*'([\s\S]*?)'\s*,\s*'=== END OF TEXT ===/);
+      if (result.includes("=== FINAL COMPLETE TEXT ===")) {
+        const match = result.match(
+          /=== FINAL COMPLETE TEXT ==='\s*,\s*'([\s\S]*?)'\s*,\s*'=== END OF TEXT ===/
+        );
         if (match && match[1]) {
           return match[1];
         }

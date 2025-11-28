@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import NavigationSidebar from "../../../components/custom/NavigationSidebar/NavigationSidebar";
+import NavigationSidebar from "../../../components/core/NavigationSidebar/NavigationSidebar";
 import { sidebarItems } from "../../../core/Constants/sidebarItemsAdmin";
 import { AgentProfileCard } from "../../../components/admin/AgentProfileCard/AgentProfileCard";
 import AgentInstructionCard from "../../../components/admin/AgentInstruction/AgentInstructionCard/AgentInstructionCard";

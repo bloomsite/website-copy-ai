@@ -5,20 +5,17 @@ import React from 'react'
 // const Home = React.lazy(() => import('../pages/Home/Home'))
 // ******* HOME PAGE *********
 
-const Start = React.lazy(() => import('../pages/Start/Start'))
-const ContentWriter = React.lazy(() => import('../pages/ContentWriter/ContentWriter'))
 
 // Authentication
-const OnboardingPage = React.lazy(() => import('../pages/OnboardingPage/OnboardingPage'))
-const LoginPage = React.lazy(() => import('../pages/LoginPage/LoginPage'))
+const LoginPage = React.lazy(() => import('../pages/AuthenticationPages/LoginPage/LoginPage'))
 const AuthenticationPage = React.lazy(() => import('../pages/AuthenticationPage/AuthenticationPage'))
 const SetPasswordPage = React.lazy(() =>
-    import('../pages/SetPasswordPage/SetPasswordPage').then((mod) => ({
+    import('../pages/AuthenticationPages/SetPasswordPage/SetPasswordPage').then((mod) => ({
         default: (mod as any).SetPasswordPage || (mod as any).default,
     }))
 )
 const ResetPasswordPage = React.lazy(() =>
-    import('../pages/ResetPasswordPage/ResetPasswordPage').then((mod) => ({
+    import('../pages/AuthenticationPages/ResetPasswordPage/ResetPasswordPage').then((mod) => ({
         default: (mod as any).ResetPasswordPage || (mod as any).default,
     }))
 )
@@ -36,6 +33,9 @@ const AdminWorkflows = React.lazy(() => import('../pages/AdminPages/AdminWorkflo
 const SubmissionOverview = React.lazy(() => import('../pages/AdminPages/AdminSubmissions/AdminSubmissions'))
 const SpecialAgent = React.lazy(() => import("../pages/AdminPages/SpecialAgentProfilePage/SpecialAgentProfilePage"))
 const WorkflowProfile = React.lazy(() => import("../pages/AdminPages/WorkflowProfilePage/WorkflowProfilePage"))
+
+// Miscellaneous
+const PageNotFoundPage = React.lazy(() => import('../pages/MiscellaneousPages/PageNotFoundPage/PageNotFoundPage'))
 
 // Dashboard
 const DashboardForms = React.lazy(() => import('../pages/DashboardPages/DashboardForms/DashboardForms'))
@@ -62,10 +62,7 @@ interface RouteConfig {
 export const routes: RouteConfig[]  = [
     // Public Routes
     {path: '/', element: DashboardForms, isProtected: false},
-    {path: '/start', element: Start, isProtected: false},
-    {path: '/content/:pageType', element: ContentWriter, isProtected: false},
     {path: '/login', element: LoginPage, isProtected: false},
-    {path: '/onboarding', element: OnboardingPage, isProtected: true},
     
     // Dashboard Routes
     {path: '/dashboard/forms', element: DashboardForms, isProtected: true},
@@ -92,5 +89,7 @@ export const routes: RouteConfig[]  = [
     {path: '/set-password/:token', element: SetPasswordPage, isProtected: false },
     {path: '/reset-password/:token', element: ResetPasswordPage, isProtected: false },
     {path: '/forgot-password', element: ResetPasswordPage, isProtected: false },
-
+    
+    // 404
+    {path: '*', element: PageNotFoundPage, isProtected: false },
 ] 

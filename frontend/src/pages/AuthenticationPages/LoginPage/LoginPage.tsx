@@ -1,8 +1,8 @@
 import React from "react";
-import Login from "../../components/custom/Login/Login";
+import Login from "../../../components/core/Login/Login";
 
 import "./LoginPage.css";
-import { useLogin } from "../../hooks/Authentication/useLogin";
+import { useLogin } from "../../../hooks/Authentication/useLogin";
 
 const LoginPage: React.FC = () => {
   const { login, isLoading, error } = useLogin();

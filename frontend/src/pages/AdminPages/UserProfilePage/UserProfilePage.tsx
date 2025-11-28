@@ -6,7 +6,7 @@ import { FormDetailModal } from "../../../components/admin/FormDetailModal/FormD
 import { useUserDetail } from "../../../hooks/Users/useUserDetail";
 import type { FormSubmission } from "../../../hooks/Users/useUserDetail";
 import "./UserProfilePage.css";
-import NavigationSidebar from "../../../components/custom/NavigationSidebar/NavigationSidebar";
+import NavigationSidebar from "../../../components/core/NavigationSidebar/NavigationSidebar";
 import { sidebarItems } from "../../../core/Constants/sidebarItemsAdmin";
 
 export const UserProfilePage: React.FC = () => {
